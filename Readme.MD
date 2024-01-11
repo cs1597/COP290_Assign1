@@ -28,10 +28,10 @@ Upon running the command, the Flask server will start, and the application shoul
 ## Screenshots
 
 ### Registration Page
-![Registration Page](Screenshots/Registration.png)
+![Registration Page](Screenshot/Registration.png)
 
 ### Login Page
-![Login Page](Screenshots/Login.png)
+![Login Page](Screenshot/Login.png)
 
 ### Dashboard
-![Dashboard](Screenshots/Dashboard.png)
+![Dashboard](Screenshot/Dashboard.png)
