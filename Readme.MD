@@ -23,3 +23,15 @@ python app.py
 
 
 Upon running the command, the Flask server will start, and the application should be accessible through a web browser at `http://localhost:5000` or the designated port displayed in your terminal.
+
+
+## Screenshots
+
+### Registration Page
+![Registration Page](screenshots/registration.png)
+
+### Login Page
+![Login Page](screenshots/login.png)
+
+### Dashboard
+![Dashboard](screenshots/dashboard.png)
