@@ -1,6 +1,6 @@
 import base64
 from io import BytesIO
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import pandas as pd
@@ -12,6 +12,8 @@ import numpy as np
 import time
 import os
 import sys
+import plotly.express as px
+import plotly.graph_objects as go
 
 
 app = Flask(__name__)
@@ -81,9 +83,64 @@ def homepage():
 def analyze():
     return render_template('analyze.html', username=session['username'])
 
-@app.route('/compare', methods=['POST','GET'])
-def compare():
-    return render_template('compare.html', username=session['username'])
+@app.route('/select_stocks', methods=['GET','POST'])
+def select_stocks():
+    return render_template('select_stocks.html', username=session['username'])
+
+@app.route('/multiple_stock_graphs', methods=['GET', 'POST'])
+def multiple_stock_graphs():
+    if request.method == 'POST':
+        stck1=request.form['stock1']
+        stck2=request.form['stock2']
+
+        end_date = datetime.now().date()
+        start_date = end_date - timedelta(days=365 * 2)
+
+        # Create an empty DataFrame to store data for all stocks
+        combined_df = pd.DataFrame()
+
+        # Fetch and combine data for each stock
+        df1 = stock_df(symbol=stck1, from_date=start_date, to_date=end_date, series="EQ")
+        df2 = stock_df(symbol=stck2, from_date=start_date, to_date=end_date, series="EQ")
+        # combined_df = pd.concat([df2[['DATE', 'CLOSE']].rename(columns={'CLOSE': f'{stck2}_CLOSE'}), df1[['DATE', 'CLOSE']].rename(columns={'CLOSE': f'{stck1}_CLOSE'})], axis=1)
+            
+        # print(combined_df.columns)
+        # print(combined_df.head())
+        # Add trace for the first stock
+        trace1=go.Scatter(x=df1['DATE'], y=df1['CLOSE'], mode='lines', name=stck1, line=dict(color='blue'))
+
+        # Add trace for the second stock
+        trace2=go.Scatter(x=df2['DATE'], y=df2['CLOSE'], mode='lines', name=stck2, line=dict(color='red'))
+
+        # Update layout for better interactivity
+        layout=go.Layout(
+            title=f'Stock Prices for {stck1} and {stck2}',
+            xaxis_title='Date',
+            yaxis_title='Close Price',
+            legend=dict(x=0, y=1, traceorder='normal'),
+            xaxis=dict(
+                type='date',  # Specify the type of x-axis as 'date'
+                tickformat='%Y-%m-%d',  # Customize the date format as needed
+            ),
+            width=800,
+            height=400
+        )
+        fig=go.Figure(data=[trace1,trace2],layout=layout)
+        # fig.show()
+
+        # Convert the plot to a base64-encoded image
+        img = BytesIO()
+        fig.write_image(img, format='png')
+        img.seek(0)
+        plot_url = base64.b64encode(img.getvalue()).decode('utf-8')
+
+        # Render the template with the interactive plot
+        return render_template('compare.html', plot_url=plot_url)
+
+    else:
+        # Handle the case where the route is accessed with a GET request
+        return render_template('multiple_stock_form.html')
+
 
 @app.route('/stockname',methods=['POST'])
 def stockname():

@@ -115,3 +115,26 @@ button {
             width: 80%;
             max-width: 800px;
         }
+
+.drop-down{
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+/* Add these styles to limit the max width of the graph container */
+.plotly-graph {
+    max-width: 800px;  /* Set your preferred maximum width */
+    width: 100%;
+    margin: auto;  /* Center the graph within the container */
+}
+
+/* Add these styles to vertically center the container */
+html, body {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
