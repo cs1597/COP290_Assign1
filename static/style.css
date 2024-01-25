@@ -15,15 +15,18 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     width: 300px;
+    
 }
 
-.login-container h2 {
+.login-container h3 {
     text-align: center;
     margin-bottom: 20px;
+    background-color: #c82333;
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
+    font:'Algerian';
 }
 
 input[type="text"], input[type="password"] {
@@ -32,6 +35,7 @@ input[type="text"], input[type="password"] {
     border: 1px solid #ddd;
     border-radius: 5px;
     box-sizing: border-box;
+    font-size: 40;
 }
 
 button {
@@ -39,7 +43,7 @@ button {
     padding: 10px;
     border: none;
     background-color: #007bff;
-
+    /* font-family: 'Algerian',sans-serif; */
 }
     /* Add this to your existing style.css */
 
@@ -63,11 +67,19 @@ button {
     background-color: #dc3545;
     color: white;
     border-radius: 5px;
-    text-decoration: none;
+    text-decoration: blink;
 }
 
 .logout-button:hover {
     background-color: #c82333;
+}
+
+.drop-down{
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    text-align: center;
 }
 
 

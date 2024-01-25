@@ -1,6 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+import pandas as pd
+from jugaad_data.nse import stock_df
+
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with your actual secret key
@@ -60,6 +63,24 @@ def dashboard():
         return render_template('welcome.html', username=session['username'])
     else:
         return redirect(url_for('index'))
+
+def get_stock_data(symbol,years):
+    end_date=pd.to_datetime('today')
+    start_date=end_date-pd.DateOffset(years=years)
+    data=stock_df(symbol=symbol,from_date=start_date.date(),to_date=end_date.date(),series="EQ")
+    return data[['DATE','OPEN','CLOSE','HIGH','LOW','LTP','VOLUME','VALUE','NO OF TRADES']]
+
+@app.route('/single_stock_graphs',methods=['POST','GET'])
+def single_stock_graphs():
+    stock_list=['ADANIENT','CIPLA','ITC','LT','ONGC','SBIN']
+    if request.method=="POST":
+        selected_stock=request.form.get('selected_stock')
+        years=1
+        stock_data=get_stock_data(selected_stock,years)
+        dates=stock_data['DATE'].to_list()
+        prices=stock_data['CLOSE'].to_list()
+        return jsonify({'dates': dates,'prices':prices})
+    return render_template('analyse_stocks.html',stock_symbols=stock_list)
 
 @app.route('/logout')
 def logout():

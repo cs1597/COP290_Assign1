@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <div class="login-container">
     <div class="form-container">
         <h2>Login</h2>
         <form action="/login" method="post">
@@ -15,10 +16,11 @@
                 <input type="password" name="password" placeholder="Password" required>
             </div>
             <div class="form-group">
-                <button type="submit">Login</button>
+                <button>LOGIN</button>
             </div>
         </form>
         <p>Don't have an account? <a href="/register">Register here</a></p>
     </div>
+</div>
 </body>
 </html>
