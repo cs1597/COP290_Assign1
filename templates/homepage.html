@@ -4,11 +4,11 @@
     <title>Welcome</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <div class="welcome-container">
-        <h1>Welcome, {{ username }}!</h1>
-        <a href="/homepage" class="logout-button">Go to Homepage</a>
+<div class="side-body">
+    <div class="sidebar">
+        <h1>Homepage, {{ username }}!</h1>
         <a href="/logout" class="logout-button">Logout</a>
+        <a href="/analyze" class="logout-button">Analyze Stock</a>
     </div>
-</body>
+</div>
 </html>
