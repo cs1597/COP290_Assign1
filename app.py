@@ -102,7 +102,6 @@ def analyze_nifty():
         plot_html=fig.to_html(full_html=False)
         return render_template('analyze_nifty.html',plot_html=plot_html)
     
-
 @app.route('/select_stock', methods=['GET','POST'])
 def select_stock():
     return render_template('select_stock.html', username=session['username'])
@@ -114,9 +113,27 @@ def select_stocks():
 @app.route('/stock_graph', methods=['GET', 'POST'])
 def stock_graph():
     if request.method == 'POST':
-        stck=request.form['stock']
         end_date = datetime.now().date()
-        start_date = end_date - timedelta(days=365 * 2)
+        if 'stock' in request.form:
+            stck=request.form['stock']
+            start_date = end_date - timedelta(weeks=2*52)
+            session['selected_stock'] = stck 
+        if 'time_period' in request.form:
+            stck=session.get('selected_stock', None)
+            time_period = request.form['time_period']
+            end_date = datetime.now().date()
+            if time_period == '1W':
+                start_date = end_date - timedelta(weeks=1)
+            elif time_period == '1M':
+                start_date = end_date - timedelta(weeks=4)
+            elif time_period == '1Y':
+                start_date = end_date - timedelta(weeks=52)
+            elif time_period == '3Y':
+                start_date = end_date - timedelta(weeks=3*52)
+            elif time_period == '5Y':
+                start_date = end_date - timedelta(weeks=5*52)
+            else:
+                start_date = end_date - timedelta(weeks=2*52)
         df = stock_df(symbol=stck, from_date=start_date, to_date=end_date, series="EQ")
         trace1=go.Scatter(x=df['DATE'], y=df['CLOSE'], mode='lines', name=stck, line=dict(color='blue'))
         layout=go.Layout(
@@ -128,7 +145,7 @@ def stock_graph():
                 type='date',  
                 tickformat='%Y-%m-%d', 
             ),
-            width=800,
+            width=1500,
             height=400
         )
         fig=go.Figure(data=trace1,layout=layout)
@@ -140,10 +157,32 @@ def stock_graph():
 @app.route('/multiple_stock_graphs', methods=['GET', 'POST'])
 def multiple_stock_graphs():
     if request.method == 'POST':
-        stck1=request.form['stock1']
-        stck2=request.form['stock2']
         end_date = datetime.now().date()
-        start_date = end_date - timedelta(days=365 * 2)
+        if 'stock1' in request.form:
+            stck1=request.form['stock1']
+            start_date = end_date - timedelta(weeks=2*52)
+            session['selected_stock1'] = stck1 
+        if 'stock2' in request.form:
+            stck2=request.form['stock2']
+            start_date = end_date - timedelta(weeks=2*52)
+            session['selected_stock2'] = stck2 
+        if 'time_period' in request.form:
+            stck1=session.get('selected_stock1', None)
+            stck2=session.get('selected_stock2', None) 
+            time_period = request.form['time_period']
+            end_date = datetime.now().date()
+            if time_period == '1W':
+                start_date = end_date - timedelta(weeks=1)
+            elif time_period == '1M':
+                start_date = end_date - timedelta(weeks=4)
+            elif time_period == '1Y':
+                start_date = end_date - timedelta(weeks=52)
+            elif time_period == '3Y':
+                start_date = end_date - timedelta(weeks=3*52)
+            elif time_period == '5Y':
+                start_date = end_date - timedelta(weeks=5*52)
+            else:
+                start_date = end_date - timedelta(weeks=2*52)
         df1 = stock_df(symbol=stck1, from_date=start_date, to_date=end_date, series="EQ")
         df2 = stock_df(symbol=stck2, from_date=start_date, to_date=end_date, series="EQ")
         trace1=go.Scatter(x=df1['DATE'], y=df1['CLOSE'], mode='lines', name=stck1, line=dict(color='blue'))
@@ -157,7 +196,7 @@ def multiple_stock_graphs():
                 type='date',  
                 tickformat='%Y-%m-%d', 
             ),
-            width=800,
+            width=1500,
             height=400
         )
         fig=go.Figure(data=[trace1,trace2],layout=layout)

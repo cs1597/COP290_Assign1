@@ -3,15 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <title>Plotly Plot</title>
-    <!-- Add Plotly JS and CSS -->
-    {{ plot_html | safe }}
 </head>
 <body>
-    </div class=>
-        <div class="form-group">
-            <button type="submit">Login</button>
-        </div>
-    <!-- Plotly plot will be inserted here -->
+    <div class="topnav">
+        <form action="/stock_graph" method="post">
+            <h1>Select Timespan</h1>
+            <div class="form-group">
+                <button type="submit" name="time_period" value="1W">1W</button>
+            </div>
+            <div class="form-group">
+                <button type="submit" name="time_period" value="1M">1M</button>
+            </div>
+            <div class="form-group">
+                <button type="submit" name="time_period" value="1Y">1Y</button>
+            </div>
+            <div class="form-group">
+                <button type="submit" name="time_period" value="3Y">3Y</button>
+            </div>
+            <div class="form-group">
+                <button type="submit" name="time_period" value="5Y">5Y</button>
+            </div>
+        </form>
+    </div>
+    <div class="plot-container">
+        {{ plot_html | safe }}
+    </div>
 </body>
 </html>
