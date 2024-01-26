@@ -3,47 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compare Stocks</title>
-    <!-- Include Plotly JavaScript library -->
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <title>Plotly Plot</title>
+    <!-- Add Plotly JS and CSS -->
+    {{ plot_html | safe }}
 </head>
 <body>
-    <h1>Stock Comparison</h1>
-    <!-- Div element to render the Plotly graph -->
-    <div id="plotly-graph" style="width:80%; height:400px;"></div>
-
-    <script>
-        // Get the base64-encoded plot image URL from the Flask route
-        var plotUrl = '{{ plot_url }}';
-        var initialWidth = 800;
-        var initialHeight = 400;
-
-        // Create a Plotly graph using the encoded image
-        Plotly.newPlot('plotly-graph', [{
-            type: 'scatter',
-            mode: 'lines',
-            line: {color: 'blue'},
-            // Other configuration options can be added as needed
-        }], {
-            title: 'Stock Prices Comparison',
-            xaxis: {title: 'Date'},
-            yaxis: {title: 'Close Price'},
-            legend: {x: 0, y: 1, traceorder: 'normal'},
-            width : initialWidth,
-            height : initialHeight,
-        });
-
-        // Update the graph with the base64-encoded image
-        Plotly.update('plotly-graph', {
-            'type': 'scatter',
-            'mode': 'lines',
-            'line': {color: 'blue'},
-            // Other configuration options can be added as needed
-            'y': plotUrl
-        } {
-            width:initialWidth,
-            height:initialHeight
-        });
-    </script>
+    <!-- Plotly plot will be inserted here -->
 </body>
 </html>

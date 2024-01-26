@@ -126,19 +126,9 @@ def multiple_stock_graphs():
             height=400
         )
         fig=go.Figure(data=[trace1,trace2],layout=layout)
-        # fig.show()
-
-        # Convert the plot to a base64-encoded image
-        img = BytesIO()
-        fig.write_image(img, format='png')
-        img.seek(0)
-        plot_url = base64.b64encode(img.getvalue()).decode('utf-8')
-
-        # Render the template with the interactive plot
-        return render_template('compare.html', plot_url=plot_url)
-
+        plot_html=fig.to_html(full_html=False)
+        return render_template('compare.html',plot_html=plot_html)
     else:
-        # Handle the case where the route is accessed with a GET request
         return render_template('multiple_stock_form.html')
 
 
