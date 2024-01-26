@@ -50,9 +50,9 @@
 <body>
     <div class="container">
         <h1>Stock Analysis Form</h1>
-        <form action="/stockname" method="post" class="form">
-            <label for="stockname">Enter Stock Symbols (comma-separated):</label>
-            <input type="text" id="stockname" name="stockname" required placeholder="AAPL, GOOGL, MSFT">
+        <form action="/stock_graph" method="post" class="form">
+            <label for="stock">Stock Symbol</label>
+            <input type="text" id="stock" name="stock" required>
 
             <button type="submit">Analyze Stocks</button>
         </form>

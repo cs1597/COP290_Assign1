@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import pandas as pd
 from datetime import datetime,timedelta
 import jugaad_data as jd
-from jugaad_data.nse import stock_df
+from jugaad_data.nse import stock_df,index_df
 import matplotlib.pyplot as plt
 import numpy as np
 import time
@@ -14,7 +14,6 @@ import os
 import sys
 import plotly.express as px
 import plotly.graph_objects as go
-
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with your actual secret key
@@ -74,53 +73,89 @@ def dashboard():
         return render_template('welcome.html', username=session['username'])
     else:
         return redirect(url_for('index'))
-
+    
 @app.route('/homepage')
 def homepage():
     return render_template('homepage.html', username=session['username'])
+    
+@app.route('/analyze_nifty', methods=['GET','POST'])
+def analyze_nifty():
+    if request.method=="POST":
+        end_date = datetime.now().date()
+        start_date = end_date - timedelta(days=365 * 2)
+        df1 = index_df(symbol="NIFTY 50", from_date=start_date, to_date=end_date)
+        df1.sort_values(by=['HistoricalDate'],inplace=True)
+        trace1=go.Scatter(x=df1['HistoricalDate'], y=df1['CLOSE'], mode='lines', name="NIFTY 50", line=dict(color='blue'))
+        layout=go.Layout(
+                title=f'Index price for NIFTY 50',
+                xaxis_title='Date',
+                yaxis_title='Close Price',
+                legend=dict(x=0, y=1, traceorder='normal'),
+                xaxis=dict(
+                    type='date',  
+                    tickformat='%Y-%m-%d', 
+                ),
+                width=800,
+                height=400
+            )
+        fig=go.Figure(data=trace1,layout=layout)
+        plot_html=fig.to_html(full_html=False)
+        return render_template('analyze_nifty.html',plot_html=plot_html)
+    
 
-@app.route('/analyze', methods=['GET','POST'])
-def analyze():
-    return render_template('analyze.html', username=session['username'])
+@app.route('/select_stock', methods=['GET','POST'])
+def select_stock():
+    return render_template('select_stock.html', username=session['username'])
 
 @app.route('/select_stocks', methods=['GET','POST'])
 def select_stocks():
     return render_template('select_stocks.html', username=session['username'])
+
+@app.route('/stock_graph', methods=['GET', 'POST'])
+def stock_graph():
+    if request.method == 'POST':
+        stck=request.form['stock']
+        end_date = datetime.now().date()
+        start_date = end_date - timedelta(days=365 * 2)
+        df = stock_df(symbol=stck, from_date=start_date, to_date=end_date, series="EQ")
+        trace1=go.Scatter(x=df['DATE'], y=df['CLOSE'], mode='lines', name=stck, line=dict(color='blue'))
+        layout=go.Layout(
+            title=f'Stock Prices for {stck}',
+            xaxis_title='Date',
+            yaxis_title='Close Price',
+            legend=dict(x=0, y=1, traceorder='normal'),
+            xaxis=dict(
+                type='date',  
+                tickformat='%Y-%m-%d', 
+            ),
+            width=800,
+            height=400
+        )
+        fig=go.Figure(data=trace1,layout=layout)
+        plot_html=fig.to_html(full_html=False)
+        return render_template('plot_stock.html',plot_html=plot_html)
+    else:
+        return render_template('stock_form.html') 
 
 @app.route('/multiple_stock_graphs', methods=['GET', 'POST'])
 def multiple_stock_graphs():
     if request.method == 'POST':
         stck1=request.form['stock1']
         stck2=request.form['stock2']
-
         end_date = datetime.now().date()
         start_date = end_date - timedelta(days=365 * 2)
-
-        # Create an empty DataFrame to store data for all stocks
-        combined_df = pd.DataFrame()
-
-        # Fetch and combine data for each stock
         df1 = stock_df(symbol=stck1, from_date=start_date, to_date=end_date, series="EQ")
         df2 = stock_df(symbol=stck2, from_date=start_date, to_date=end_date, series="EQ")
-        # combined_df = pd.concat([df2[['DATE', 'CLOSE']].rename(columns={'CLOSE': f'{stck2}_CLOSE'}), df1[['DATE', 'CLOSE']].rename(columns={'CLOSE': f'{stck1}_CLOSE'})], axis=1)
-            
-        # print(combined_df.columns)
-        # print(combined_df.head())
-        # Add trace for the first stock
         trace1=go.Scatter(x=df1['DATE'], y=df1['CLOSE'], mode='lines', name=stck1, line=dict(color='blue'))
-
-        # Add trace for the second stock
         trace2=go.Scatter(x=df2['DATE'], y=df2['CLOSE'], mode='lines', name=stck2, line=dict(color='red'))
-
-        # Update layout for better interactivity
         layout=go.Layout(
             title=f'Stock Prices for {stck1} and {stck2}',
             xaxis_title='Date',
             yaxis_title='Close Price',
             legend=dict(x=0, y=1, traceorder='normal'),
             xaxis=dict(
-                type='date',  # Specify the type of x-axis as 'date'
-                tickformat='%Y-%m-%d',  # Customize the date format as needed
+                type='date',  
+                tickformat='%Y-%m-%d', 
             ),
             width=800,
             height=400
@@ -129,37 +164,7 @@ def multiple_stock_graphs():
         plot_html=fig.to_html(full_html=False)
         return render_template('compare.html',plot_html=plot_html)
     else:
-        return render_template('multiple_stock_form.html')
-
-
-@app.route('/stockname',methods=['POST'])
-def stockname():
-    if request.method=='POST':
-        stck=request.form['stockname']
-        end_date=datetime.now().date()
-        start_date=end_date-timedelta(days=365*0.2)
-        df = stock_df(symbol=stck, from_date=start_date, to_date=end_date, series="EQ")
-        df_array = df[['DATE', 'CLOSE']].to_numpy()
-        plt.figure(figsize=(10, 6))
-        plt.plot(df_array[:, 0], df_array[:, 1], label='Stock Price')
-        plt.title(f'Stock Price for {stck}')
-        plt.xlabel('date')
-        plt.ylabel('Close Price')
-        plt.legend()
-        plt.grid(True)
-
-        # Convert the plot to a base64-encoded image
-        img = BytesIO()
-        plt.savefig(img, format='png')
-        img.seek(0)
-        plot_url = base64.b64encode(img.getvalue()).decode('utf-8')
-
-        plt.close()
-    # Render the template with the plot
-        return render_template('stockanalyze.html', plot_url=plot_url)
-    else:
-        # Handle the case where the route is accessed with a GET request
-        return render_template('stock_form.html')
+        return render_template('multiple_stock_form.html')                                                                                                                                                                                                                                       
 
 @app.route('/logout')
 def logout():
