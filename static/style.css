@@ -117,12 +117,10 @@ body {
 }
 
 .plot-container{
+    height: 600px;
     width:100%;
-    margin:0 auto;
-    margin-top: 20px;
+    margin-top: 350px;
 }
-
-/* style.css */
 
 .topnav {
     margin-top:100px ;
@@ -213,6 +211,43 @@ body {
     color: black;
 }
 
+.filter-box{
+    margin-top: 100px;
+    width: 400px;
+    height: 200px;
+    background-color: #007bff;
+}
+
+.filter-box form{
+    font-family: 'Courier New', monospace;
+    color:#00ff08;
+    display: flex;
+    flex-direction: column;
+    /* text-align: left; */
+    text-align: center;
+    font-size : 12px;
+    padding-bottom: 20px;
+}
+
+h2 {
+    color: #333;
+}
+
+table {
+    border-collapse: collapse;
+    width: 500px;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
 
 .form-group {
     margin-bottom: 15px;

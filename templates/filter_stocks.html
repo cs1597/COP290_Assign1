@@ -1,0 +1,73 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table with Hyperlinks</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="filter-box" style="margin-right: 700px;margin-bottom: 250px; position: fixed;" >
+        <form action="/filter_stocks" method="post">
+            <h1>Filter by Close Price</h1>
+            <input type="text" id="lower_bound" name="lower_bound" placeholder="Lower Bound" style="width: 140px;margin-right: 200px;margin-top: 0px;padding-top: 5px;padding-bottom: 5px;height: 30px;font-size: 20px;margin-left: 125px;">
+            <input type="text" id="lower_bound" name="upper_bound" placeholder="Upper Bound" required style="width: 140px;margin-right: 200px;margin-top: 20px;padding-top: 5px;padding-bottom: 5px;height: 30px;font-size: 20px;margin-left: 125px;">
+            <button type="submit">Filter</button>
+        </form>
+    </div>
+    <table style="margin-left: 270px;margin-bottom: 225px;">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in data %}
+                <tr>
+                    <td>{{ item['Name'] }}</td>
+                    <td><a href="{{ url_for('item', item_id=loop.index) }}">Details</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <title>Plotly Plot</title>
+</head>
+<body>
+    <div class="topnav">
+        <h1>Enter details</h1>
+        <form action="/filter_stocks" method="post">
+            <div class="form-group">
+                <label for="close" style="margin-top: 5px; margin-left: -300px;">Enter bounds for Close Price: </label>
+                <input type="text" id="close_lower_bound" name="close_lower_bound" placeholder="close_lower_bound" style="padding:2px; height: 28px; width: 150px;margin-right: -76px;margin-left: 0px;">
+                <label style="margin-left: 80px;">to</label> 
+                <input type="text" id="close_upper_bound" name="close_upper_bound" placeholder="close_upper_bound" style="height: 28px; width: 150px;padding: 2px;">
+            </div>
+            <div class="form-group">
+                <button type="submit">Submit</button>
+            </div>
+            <div class="form-group">
+                <label for="value" style="margin-top: 5px; margin-left: -300px;">Enter bounds for Value: </label>
+                <input type="text" id="value_lower_bound" name="value_lower_bound" placeholder="value_lower_bound" style="padding:2px; height: 28px; width: 150px;margin-right: -76px;margin-left: 0px;">
+                <label style="margin-left: 80px;">to</label> 
+                <input type="text" id="value_upper_bound" name="value_upper_bound" placeholder="value_upper_bound" style="height: 28px; width: 150px;padding: 2px;">
+            </div>
+            <div class="form-group">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+    <div class="plot-container">
+        {{ plot_html | safe }}
+    </div>
+</body>
+</html>
