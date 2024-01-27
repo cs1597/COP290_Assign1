@@ -101,41 +101,51 @@ def analyze_nifty():
         fig=go.Figure(data=trace1,layout=layout)
         plot_html=fig.to_html(full_html=False)
         return render_template('analyze_nifty.html',plot_html=plot_html)
-    
-@app.route('/select_stock', methods=['GET','POST'])
-def select_stock():
-    return render_template('select_stock.html', username=session['username'])
-
-@app.route('/select_stocks', methods=['GET','POST'])
-def select_stocks():
-    return render_template('select_stocks.html', username=session['username'])
 
 @app.route('/stock_graph', methods=['GET', 'POST'])
 def stock_graph():
     if request.method == 'POST':
+        stck=request.form['stock']
+        session["selected_stock"]=stck
+        time_period = request.form['time_period']
         end_date = datetime.now().date()
-        if 'stock' in request.form:
-            stck=request.form['stock']
+        if time_period == '1W':
+            start_date = end_date - timedelta(weeks=1)
+        elif time_period == '1M':
+            start_date = end_date - timedelta(weeks=4)
+        elif time_period == '1Y':
+            start_date = end_date - timedelta(weeks=52)
+        elif time_period == '3Y':
+            start_date = end_date - timedelta(weeks=3*52)
+        elif time_period == '5Y':
+            start_date = end_date - timedelta(weeks=5*52)
+        else:
             start_date = end_date - timedelta(weeks=2*52)
-            session['selected_stock'] = stck 
-        if 'time_period' in request.form:
-            stck=session.get('selected_stock', None)
-            time_period = request.form['time_period']
-            end_date = datetime.now().date()
-            if time_period == '1W':
-                start_date = end_date - timedelta(weeks=1)
-            elif time_period == '1M':
-                start_date = end_date - timedelta(weeks=4)
-            elif time_period == '1Y':
-                start_date = end_date - timedelta(weeks=52)
-            elif time_period == '3Y':
-                start_date = end_date - timedelta(weeks=3*52)
-            elif time_period == '5Y':
-                start_date = end_date - timedelta(weeks=5*52)
-            else:
-                start_date = end_date - timedelta(weeks=2*52)
+        param=request.form["parameter"]
         df = stock_df(symbol=stck, from_date=start_date, to_date=end_date, series="EQ")
-        trace1=go.Scatter(x=df['DATE'], y=df['CLOSE'], mode='lines', name=stck, line=dict(color='blue'))
+        trace1=go.Scatter(x=df['DATE'], y=df[param], mode='lines', name=stck, line=dict(color='blue'))
+        layout=go.Layout(
+            title=f'Stock Prices for {stck}',
+            xaxis_title='Date',
+            yaxis_title=param,
+            legend=dict(x=0, y=1, traceorder='normal'),
+            xaxis=dict(
+                type='date',  
+                tickformat='%Y-%m-%d', 
+            ),
+            width=1500,
+            height=400
+        )
+        fig=go.Figure(data=trace1,layout=layout)
+        plot_html=fig.to_html(full_html=False)
+        return render_template('plot_stock.html',plot_html=plot_html)
+    else:
+        stck="SBIN"
+        end_date = datetime.now().date()
+        start_date = end_date - timedelta(weeks=2*52) 
+        param="CLOSE"
+        df = stock_df(symbol=stck, from_date=start_date, to_date=end_date, series="EQ")
+        trace1=go.Scatter(x=df['DATE'], y=df[param], mode='lines', name=stck, line=dict(color='blue'))
         layout=go.Layout(
             title=f'Stock Prices for {stck}',
             xaxis_title='Date',
@@ -150,45 +160,61 @@ def stock_graph():
         )
         fig=go.Figure(data=trace1,layout=layout)
         plot_html=fig.to_html(full_html=False)
-        return render_template('plot_stock.html',plot_html=plot_html)
-    else:
-        return render_template('stock_form.html') 
+        return render_template('plot_stock.html') 
 
-@app.route('/multiple_stock_graphs', methods=['GET', 'POST'])
-def multiple_stock_graphs():
+@app.route('/compare', methods=['GET', 'POST'])
+def compare():
     if request.method == 'POST':
+        session.pop('selected_stocks', None)
+        symbols = request.form['stock'].split(',')
+        session['selected_stocks'] = symbols
+        time_period = request.form['time_period']
         end_date = datetime.now().date()
-        if 'stock1' in request.form:
-            stck1=request.form['stock1']
+        if time_period == '1W':
+            start_date = end_date - timedelta(weeks=1)
+        elif time_period == '1M':
+            start_date = end_date - timedelta(weeks=4)
+        elif time_period == '1Y':
+            start_date = end_date - timedelta(weeks=52)
+        elif time_period == '3Y':
+            start_date = end_date - timedelta(weeks=3*52)
+        elif time_period == '5Y':
+            start_date = end_date - timedelta(weeks=5*52)
+        else:
             start_date = end_date - timedelta(weeks=2*52)
-            session['selected_stock1'] = stck1 
-        if 'stock2' in request.form:
-            stck2=request.form['stock2']
-            start_date = end_date - timedelta(weeks=2*52)
-            session['selected_stock2'] = stck2 
-        if 'time_period' in request.form:
-            stck1=session.get('selected_stock1', None)
-            stck2=session.get('selected_stock2', None) 
-            time_period = request.form['time_period']
-            end_date = datetime.now().date()
-            if time_period == '1W':
-                start_date = end_date - timedelta(weeks=1)
-            elif time_period == '1M':
-                start_date = end_date - timedelta(weeks=4)
-            elif time_period == '1Y':
-                start_date = end_date - timedelta(weeks=52)
-            elif time_period == '3Y':
-                start_date = end_date - timedelta(weeks=3*52)
-            elif time_period == '5Y':
-                start_date = end_date - timedelta(weeks=5*52)
-            else:
-                start_date = end_date - timedelta(weeks=2*52)
-        df1 = stock_df(symbol=stck1, from_date=start_date, to_date=end_date, series="EQ")
-        df2 = stock_df(symbol=stck2, from_date=start_date, to_date=end_date, series="EQ")
-        trace1=go.Scatter(x=df1['DATE'], y=df1['CLOSE'], mode='lines', name=stck1, line=dict(color='blue'))
-        trace2=go.Scatter(x=df2['DATE'], y=df2['CLOSE'], mode='lines', name=stck2, line=dict(color='red'))
+        plots = []
+        param=request.form["parameter"]
+        for stck in symbols:
+            stck=stck.strip()
+            df = stock_df(symbol=stck, from_date=start_date, to_date=end_date, series="EQ")
+            trace = go.Scatter(x=df['DATE'], y=df[param], mode='lines', name=stck, line=dict(color='blue'))
+            plots.append(trace)
+
+        layout = go.Layout(
+            title=f'Stock Prices for {", ".join(symbols)}',
+            xaxis_title='Date',
+            yaxis_title=param,
+            legend=dict(x=0, y=1, traceorder='normal'),
+            xaxis=dict(
+                type='date',
+                tickformat='%Y-%m-%d',
+            ),
+            width=1500,
+            height=400
+        )
+
+        fig = go.Figure(data=plots, layout=layout)
+        plot_html = fig.to_html(full_html=False)
+        return render_template('compare.html', plot_html=plot_html)
+    else:
+        stck="SBIN"
+        end_date = datetime.now().date()
+        start_date = end_date - timedelta(weeks=2*52) 
+        param="CLOSE"
+        df = stock_df(symbol=stck, from_date=start_date, to_date=end_date, series="EQ")
+        trace1=go.Scatter(x=df['DATE'], y=df[param], mode='lines', name=stck, line=dict(color='blue'))
         layout=go.Layout(
-            title=f'Stock Prices for {stck1} and {stck2}',
+            title=f'Stock Prices for {stck}',
             xaxis_title='Date',
             yaxis_title='Close Price',
             legend=dict(x=0, y=1, traceorder='normal'),
@@ -199,11 +225,60 @@ def multiple_stock_graphs():
             width=1500,
             height=400
         )
-        fig=go.Figure(data=[trace1,trace2],layout=layout)
+        fig=go.Figure(data=trace1,layout=layout)
         plot_html=fig.to_html(full_html=False)
-        return render_template('compare.html',plot_html=plot_html)
-    else:
-        return render_template('multiple_stock_form.html')                                                                                                                                                                                                                                       
+        return render_template('compare.html')
+
+# @app.route('/multiple_stock_graphs', methods=['GET', 'POST'])
+# def multiple_stock_graphs():
+#     if request.method == 'POST':
+#         end_date = datetime.now().date()
+#         if 'stock1' in request.form:
+#             stck1=request.form['stock1']
+#             start_date = end_date - timedelta(weeks=2*52)
+#             session['selected_stock1'] = stck1 
+#         if 'stock2' in request.form:
+#             stck2=request.form['stock2']
+#             start_date = end_date - timedelta(weeks=2*52)
+#             session['selected_stock2'] = stck2 
+#         if 'time_period' in request.form:
+#             stck1=session.get('selected_stock1', None)
+#             stck2=session.get('selected_stock2', None) 
+#             time_period = request.form['time_period']
+#             end_date = datetime.now().date()
+#             if time_period == '1W':
+#                 start_date = end_date - timedelta(weeks=1)
+#             elif time_period == '1M':
+#                 start_date = end_date - timedelta(weeks=4)
+#             elif time_period == '1Y':
+#                 start_date = end_date - timedelta(weeks=52)
+#             elif time_period == '3Y':
+#                 start_date = end_date - timedelta(weeks=3*52)
+#             elif time_period == '5Y':
+#                 start_date = end_date - timedelta(weeks=5*52)
+#             else:
+#                 start_date = end_date - timedelta(weeks=2*52)
+#         df1 = stock_df(symbol=stck1, from_date=start_date, to_date=end_date, series="EQ")
+#         df2 = stock_df(symbol=stck2, from_date=start_date, to_date=end_date, series="EQ")
+#         trace1=go.Scatter(x=df1['DATE'], y=df1['CLOSE'], mode='lines', name=stck1, line=dict(color='blue'))
+#         trace2=go.Scatter(x=df2['DATE'], y=df2['CLOSE'], mode='lines', name=stck2, line=dict(color='red'))
+#         layout=go.Layout(
+#             title=f'Stock Prices for {stck1} and {stck2}',
+#             xaxis_title='Date',
+#             yaxis_title='Close Price',
+#             legend=dict(x=0, y=1, traceorder='normal'),
+#             xaxis=dict(
+#                 type='date',  
+#                 tickformat='%Y-%m-%d', 
+#             ),
+#             width=1500,
+#             height=400
+#         )
+#         fig=go.Figure(data=[trace1,trace2],layout=layout)
+#         plot_html=fig.to_html(full_html=False)
+#         return render_template('compare.html',plot_html=plot_html)
+#     else:
+#         return render_template('multiple_stock_form.html')                                                                                                                                                                                                                                       
 
 @app.route('/logout')
 def logout():

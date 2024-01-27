@@ -125,7 +125,8 @@ body {
 /* style.css */
 
 .topnav {
-    height:300px; /* Full-height: remove this if you want "auto" height */
+    margin-top:100px ;
+    height:250px; /* Full-height: remove this if you want "auto" height */
     width:100%; /* Set the width of the sidebar */
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */
     z-index: 1; /* Stay on top */
@@ -133,28 +134,49 @@ body {
     left: 0;
     background-color: #efead2; 
     overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 20px;
+    padding-top: 0px;
 }
 
 .topnav form{
-    height: 200px;
-    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top:150px;
+    height: 150px;
+    width: 100%;
     position: fixed;
     z-index:1;
     top:0;
     left:0;
     background-color: #efead2; 
     overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 20px;
+    padding-top: 0px;
+}
+
+.topnav select{
+    width: 300px;
+    height: 40px;
+    padding-top:5px ;
+    padding-bottom: 5px;
+    text-align: center;
+}
+
+.topnav select option{
+    font-family: 'Courier New', monospace;
+    font-size: 25 px;
+    text-align: center;
 }
 
 .topnav h1{
+    margin-top: 10px;
+    margin-bottom: 10px;
     font-family: 'Courier New', monospace;
     color:#070807;
     /* text-align: left; */
     text-align: center;
     font-size : 20px;
-    padding-bottom: 20px;
+    padding-bottom: 0px;
+    padding-top: 0px;
 }
 
 .topnav button {
