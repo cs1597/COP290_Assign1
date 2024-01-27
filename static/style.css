@@ -9,24 +9,191 @@ body {
     margin: 0;
 }
 
+.sidenav {
+    height: 100%; /* Full-height: remove this if you want "auto" height */
+    width: 200px; /* Set the width of the sidebar */
+    position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+    z-index: 1; /* Stay on top */
+    top: 0; /* Stay at the top */
+    left: 0;
+    background-color: #efead2; 
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 20px;
+}
+
+.sidenav-button {
+    display: inline-block;
+    padding: 10px 20px 10px 20px;
+    background-color: #efead2;
+    color: white;
+    text-decoration: none;
+}
+
+.sidenav-button:hover {
+    background-color:#7f815b;
+}
+
+.sidenav h1 {
+    font-family: 'Courier New', monospace;
+    color:#070807;
+    text-align: center;
+    font-size : 20px;
+    padding-bottom: 20px;
+}
+
+.sidenav a {
+    font-family: 'Courier New', monospace;
+    padding: 6px 8px 6px 8px;
+    font-size: 16px;
+    color:#00ff08;
+    display: block;
+}
+
+.sidenav a:hover {
+  color: #44a812;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.nifty{
+    margin-bottom:480px;
+    margin-right: 530px; 
+    height: 40px;
+    width: 400px;
+    background-color: #efead2; 
+    padding: 10px 10px 10px 10px;
+}
+
+.nifty h1{
+    font-family: 'Courier New', monospace;
+    color:#00ff08;
+    /* text-align: left; */
+    text-align: top;
+    font-size : 25px;
+    padding-bottom: 20px;
+}
+
+.nifty a {
+    font-family: 'Courier New', monospace;
+    padding: 6px 8px 6px 8px;
+    font-size: 16px;
+    color:#00ff08;
+    display: block;
+}
+
+.nifty a:hover {
+  color: #44a812;
+}
+
+.nifty-button {
+    display: inline-block;
+    padding: 10px 20px 10px 20px;
+    background-color: #efead2;
+    color: white;
+    text-decoration: none;
+}
+
+.nifty-button:hover {
+    background-color:#7f815b;
+}
+
 .login-container {
     background-color: white;
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     width: 300px;
-    
 }
 
-.login-container h3 {
+.login-container h2 {
     text-align: center;
     margin-bottom: 20px;
-    background-color: #c82333;
 }
 
+.plot-container{
+    width:100%;
+    margin:0 auto;
+    margin-top: 20px;
+}
+
+/* style.css */
+
+.topnav {
+    height:300px; /* Full-height: remove this if you want "auto" height */
+    width:100%; /* Set the width of the sidebar */
+    position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+    z-index: 1; /* Stay on top */
+    top: 0; /* Stay at the top */
+    left: 0;
+    background-color: #efead2; 
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 20px;
+}
+
+.topnav form{
+    height: 200px;
+    width: 40%;
+    position: fixed;
+    z-index:1;
+    top:0;
+    left:0;
+    background-color: #efead2; 
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 20px;
+}
+
+.topnav h1{
+    font-family: 'Courier New', monospace;
+    color:#070807;
+    /* text-align: left; */
+    text-align: center;
+    font-size : 20px;
+    padding-bottom: 20px;
+}
+
+.topnav button {
+    font-family: 'Courier New', monospace;
+    padding: 6px 8px 6px 8px;
+    font-size: 16px;
+    color:#00ff08;
+    background-color:#efead2 ;
+    display: block;
+}
+
+.topnav button:hover {
+  color: #44a812;
+  background-color: #7f815b;
+}
+
+.topnav form .form-group{
+    padding: 1px;
+}
+
+
+.top-navigator a {
+    margin-top:0 ;
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.top-navigator a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+
 .form-group {
-    margin-bottom: 10px;
-    font:'Algerian';
+    margin-bottom: 15px;
 }
 
 input[type="text"], input[type="password"] {
@@ -35,7 +202,6 @@ input[type="text"], input[type="password"] {
     border: 1px solid #ddd;
     border-radius: 5px;
     box-sizing: border-box;
-    font-size: 40;
 }
 
 button {
@@ -43,9 +209,7 @@ button {
     padding: 10px;
     border: none;
     background-color: #007bff;
-    /* font-family: 'Algerian',sans-serif; */
 }
-    /* Add this to your existing style.css */
 
 .welcome-container {
     text-align: center;
@@ -67,23 +231,58 @@ button {
     background-color: #dc3545;
     color: white;
     border-radius: 5px;
-    text-decoration: blink;
+    text-decoration: none;
 }
 
 .logout-button:hover {
     background-color: #c82333;
 }
 
-.drop-down{
+.logo {
+    width: 100px;
+    height: auto;
+    margin-top: 20px;
+}
+
+/* Consolidate sidebar styles */
+.sidebar {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    background-color: #28d3dc;
+    padding-top: 20px;
+    color: #fff;
+}
+
+.content {
+    flex-grow: 1;
+    padding: 20px; 
+}
+
+.graph {
+    width: 80%;
+    max-width: 800px;
+}
+
+/* Add these styles to limit the max width of the graph container */
+.plotly-graph {
+    max-width: 800px;  /* Set your preferred maximum width */
+    width: 100%;
+    margin: auto;  /* Center the graph within the container */
+}
+
+/* Add these styles to vertically center the container */
+html, body {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.drop-down {
     background-color: #fff;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     text-align: center;
-}
-
-#stock-chart {
-    border: 2px solid #2f8fce; /* Add border to the graph */
-    /* padding: 10px; */
-    margin-top: 20px; /* Add margin at the top for separation */
 }

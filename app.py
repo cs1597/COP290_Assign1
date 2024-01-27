@@ -1,10 +1,19 @@
+import base64
+from io import BytesIO
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import pandas as pd
-from jugaad_data.nse import stock_df
-from datetime import timedelta
-
+from datetime import datetime,timedelta
+import jugaad_data as jd
+from jugaad_data.nse import stock_df,index_df
+import matplotlib.pyplot as plt
+import numpy as np
+import time
+import os
+import sys
+import plotly.express as px
+import plotly.graph_objects as go
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with your actual secret key
@@ -64,44 +73,137 @@ def dashboard():
         return render_template('welcome.html', username=session['username'])
     else:
         return redirect(url_for('index'))
-
-# should we take from the user that for last how much time do they want the data to be seen?
-def get_stock_data(symbol,time_scale):
-    # end_date=pd.to_datetime('today')
-    # start_date=end_date-pd.DateOffset(years=years)
-    # data=stock_df(symbol=symbol,from_date=start_date.date(),to_date=end_date.date(),series="EQ")
-    # return data[['DATE','OPEN','CLOSE','HIGH','LOW','LTP','VOLUME','VALUE','NO OF TRADES']]
-    end_date=pd.to_datetime('today')
-    if time_scale=="Daily":
-        start_date=end_date-timedelta(days=365)
-        interval='1D'
-    elif time_scale=="Weekly":
-        start_date=end_date-timedelta(weeks=52*5)
-        interval='1W'
-    elif time_scale=="Monthly":
-        start_date=end_date-timedelta(weeks=52*20)
-        interval='1M'
-    elif time_scale=='yearly':
-        start_date =end_date-timedelta(weeks=52*20)
-        interval='1Y'
-    data=stock_df(symbol=symbol,from_date=start_date.date(),to_date=end_date.date(),series="EQ",interval=interval)
-    return data[['DATE','CLOSE']]
-
-
-@app.route('/single_stock_graphs',methods=['POST','GET'])
-def single_stock_graphs():
-    stock_list=['ADANIENT','CIPLA','ITC','LT','ONGC','SBIN']
-    print("Hello1")
+    
+@app.route('/homepage')
+def homepage():
+    return render_template('homepage.html', username=session['username'])
+    
+@app.route('/analyze_nifty', methods=['GET','POST'])
+def analyze_nifty():
     if request.method=="POST":
-        selected_stock=request.form.get('selected_stock')
-        selected_time_scale=request.form.get('time_scale')
-        print("Helloo")
-        stock_data=get_stock_data(selected_stock,selected_time_scale)
-        print("Hello")
-        dates=stock_data['DATE'].to_list()
-        prices=stock_data['CLOSE'].to_list()
-        return jsonify({'dates': dates,'prices':prices})
-    return render_template('analyse_stocks.html',stock_symbols=stock_list)
+        end_date = datetime.now().date()
+        start_date = end_date - timedelta(days=365 * 2)
+        df1 = index_df(symbol="NIFTY 50", from_date=start_date, to_date=end_date)
+        df1.sort_values(by=['HistoricalDate'],inplace=True)
+        trace1=go.Scatter(x=df1['HistoricalDate'], y=df1['CLOSE'], mode='lines', name="NIFTY 50", line=dict(color='blue'))
+        layout=go.Layout(
+                title=f'Index price for NIFTY 50',
+                xaxis_title='Date',
+                yaxis_title='Close Price',
+                legend=dict(x=0, y=1, traceorder='normal'),
+                xaxis=dict(
+                    type='date',  
+                    tickformat='%Y-%m-%d', 
+                ),
+                width=800,
+                height=400
+            )
+        fig=go.Figure(data=trace1,layout=layout)
+        plot_html=fig.to_html(full_html=False)
+        return render_template('analyze_nifty.html',plot_html=plot_html)
+    
+@app.route('/select_stock', methods=['GET','POST'])
+def select_stock():
+    return render_template('select_stock.html', username=session['username'])
+
+@app.route('/select_stocks', methods=['GET','POST'])
+def select_stocks():
+    return render_template('select_stocks.html', username=session['username'])
+
+@app.route('/stock_graph', methods=['GET', 'POST'])
+def stock_graph():
+    if request.method == 'POST':
+        end_date = datetime.now().date()
+        if 'stock' in request.form:
+            stck=request.form['stock']
+            start_date = end_date - timedelta(weeks=2*52)
+            session['selected_stock'] = stck 
+        if 'time_period' in request.form:
+            stck=session.get('selected_stock', None)
+            time_period = request.form['time_period']
+            end_date = datetime.now().date()
+            if time_period == '1W':
+                start_date = end_date - timedelta(weeks=1)
+            elif time_period == '1M':
+                start_date = end_date - timedelta(weeks=4)
+            elif time_period == '1Y':
+                start_date = end_date - timedelta(weeks=52)
+            elif time_period == '3Y':
+                start_date = end_date - timedelta(weeks=3*52)
+            elif time_period == '5Y':
+                start_date = end_date - timedelta(weeks=5*52)
+            else:
+                start_date = end_date - timedelta(weeks=2*52)
+        df = stock_df(symbol=stck, from_date=start_date, to_date=end_date, series="EQ")
+        trace1=go.Scatter(x=df['DATE'], y=df['CLOSE'], mode='lines', name=stck, line=dict(color='blue'))
+        layout=go.Layout(
+            title=f'Stock Prices for {stck}',
+            xaxis_title='Date',
+            yaxis_title='Close Price',
+            legend=dict(x=0, y=1, traceorder='normal'),
+            xaxis=dict(
+                type='date',  
+                tickformat='%Y-%m-%d', 
+            ),
+            width=1500,
+            height=400
+        )
+        fig=go.Figure(data=trace1,layout=layout)
+        plot_html=fig.to_html(full_html=False)
+        return render_template('plot_stock.html',plot_html=plot_html)
+    else:
+        return render_template('stock_form.html') 
+
+@app.route('/multiple_stock_graphs', methods=['GET', 'POST'])
+def multiple_stock_graphs():
+    if request.method == 'POST':
+        end_date = datetime.now().date()
+        if 'stock1' in request.form:
+            stck1=request.form['stock1']
+            start_date = end_date - timedelta(weeks=2*52)
+            session['selected_stock1'] = stck1 
+        if 'stock2' in request.form:
+            stck2=request.form['stock2']
+            start_date = end_date - timedelta(weeks=2*52)
+            session['selected_stock2'] = stck2 
+        if 'time_period' in request.form:
+            stck1=session.get('selected_stock1', None)
+            stck2=session.get('selected_stock2', None) 
+            time_period = request.form['time_period']
+            end_date = datetime.now().date()
+            if time_period == '1W':
+                start_date = end_date - timedelta(weeks=1)
+            elif time_period == '1M':
+                start_date = end_date - timedelta(weeks=4)
+            elif time_period == '1Y':
+                start_date = end_date - timedelta(weeks=52)
+            elif time_period == '3Y':
+                start_date = end_date - timedelta(weeks=3*52)
+            elif time_period == '5Y':
+                start_date = end_date - timedelta(weeks=5*52)
+            else:
+                start_date = end_date - timedelta(weeks=2*52)
+        df1 = stock_df(symbol=stck1, from_date=start_date, to_date=end_date, series="EQ")
+        df2 = stock_df(symbol=stck2, from_date=start_date, to_date=end_date, series="EQ")
+        trace1=go.Scatter(x=df1['DATE'], y=df1['CLOSE'], mode='lines', name=stck1, line=dict(color='blue'))
+        trace2=go.Scatter(x=df2['DATE'], y=df2['CLOSE'], mode='lines', name=stck2, line=dict(color='red'))
+        layout=go.Layout(
+            title=f'Stock Prices for {stck1} and {stck2}',
+            xaxis_title='Date',
+            yaxis_title='Close Price',
+            legend=dict(x=0, y=1, traceorder='normal'),
+            xaxis=dict(
+                type='date',  
+                tickformat='%Y-%m-%d', 
+            ),
+            width=1500,
+            height=400
+        )
+        fig=go.Figure(data=[trace1,trace2],layout=layout)
+        plot_html=fig.to_html(full_html=False)
+        return render_template('compare.html',plot_html=plot_html)
+    else:
+        return render_template('multiple_stock_form.html')                                                                                                                                                                                                                                       
 
 @app.route('/logout')
 def logout():

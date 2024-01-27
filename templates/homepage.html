@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<div class="sidenav">
+    <h1>Homepage</h1>
+    <a href="/logout" class="sidenav-button">Logout</a>
+    <a href="/select_stock" class="sidenav-button">Analyze Stock</a>
+    <a href="/select_stocks" class="sidenav-button">Compare Stocks</a>
+</div>
+
+<div class="nifty">
+    <h1>NIFTY50 INDEX</h1>
+    <form action="/analyze_nifty" method="post">
+        <div class="nifty-button">
+            <button type="submit">Analyze</button>
+        </div>
+    </form>
+</div>
+
+</html>
