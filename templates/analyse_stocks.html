@@ -16,6 +16,15 @@
                     <option value="{{ stock }}">{{ stock }}</option>
                 {% endfor %}
             </select>
+
+            <label for="time_scale">Select time Scale:</label>
+            <select name="time_scale" id="tme_scale" required>
+                <option value='Daily'>Daily</option>
+                <option value='Weekly'>Weekly</option>
+                <option value='Monthly'>Monthly</option>
+                <option value='Yearly'>Yearly</option>
+            </select>
+
             <button type="submit">Analyze</button>
         </form>
     </div>
@@ -26,25 +35,44 @@
         document.querySelector('form').addEventListener('submit', function (event) {
             event.preventDefault();
             let selectedStock = document.getElementById('selected_stock').value;
-
-            fetch('/single_stock_graphs', {
+            let selectedTimeScale = document.getElementById('time_scale').value;
+            // fetch('/single_stock_graphs', {
+            //     method: 'POST',
+            //     body: new URLSearchParams({ 'selected_stock': selectedStock }),
+            //     headers: {
+            //         'Content-Type': 'application/x-www-form-urlencoded',
+            //     },
+            // })
+            fetch(`/single_stock_graphs?selected_stock=${selectedStock}&time_scale=${selectedTimeScale}`,{
                 method: 'POST',
-                body: new URLSearchParams({ 'selected_stock': selectedStock }),
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
             })
             .then(response => response.json())
             .then(data => {
+                console.log(data);
+                // Convert Timestamp objects to date strings without time
+                let formattedDates = data.dates.map(date => new Date(date).toISOString().split('T')[0]);
+
                 Plotly.newPlot('stock-chart', [{
-                    x: data.dates,
+                    x: formattedDates,
                     y: data.prices,
                     type: 'scatter',
                     mode: 'lines+markers',
                     name: selectedStock,
-                }], { title: `${selectedStock} Stock Prices` });
+                    showlegend: true,
+                }], {
+                        title: '${selectedStock} Stock Prices',
+                        xaxis: {title: 'Date',
+                                type: 'category',},
+                        margin: {b: 150},
+                        yaxis:{title: 'Price'},
+                        legend:{
+                            x: 0.02,
+                            y: 1.0
+                        },
+                        plot_bgcolor: '#d4ecfc'});
             });
         });
     </script>
 </body>
 </html>
+

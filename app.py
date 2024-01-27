@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import pandas as pd
 from jugaad_data.nse import stock_df
+from datetime import timedelta
 
 
 app = Flask(__name__)
@@ -64,19 +65,39 @@ def dashboard():
     else:
         return redirect(url_for('index'))
 
-def get_stock_data(symbol,years):
+# should we take from the user that for last how much time do they want the data to be seen?
+def get_stock_data(symbol,time_scale):
+    # end_date=pd.to_datetime('today')
+    # start_date=end_date-pd.DateOffset(years=years)
+    # data=stock_df(symbol=symbol,from_date=start_date.date(),to_date=end_date.date(),series="EQ")
+    # return data[['DATE','OPEN','CLOSE','HIGH','LOW','LTP','VOLUME','VALUE','NO OF TRADES']]
     end_date=pd.to_datetime('today')
-    start_date=end_date-pd.DateOffset(years=years)
-    data=stock_df(symbol=symbol,from_date=start_date.date(),to_date=end_date.date(),series="EQ")
-    return data[['DATE','OPEN','CLOSE','HIGH','LOW','LTP','VOLUME','VALUE','NO OF TRADES']]
+    if time_scale=="Daily":
+        start_date=end_date-timedelta(days=365)
+        interval='1D'
+    elif time_scale=="Weekly":
+        start_date=end_date-timedelta(weeks=52*5)
+        interval='1W'
+    elif time_scale=="Monthly":
+        start_date=end_date-timedelta(weeks=52*20)
+        interval='1M'
+    elif time_scale=='yearly':
+        start_date =end_date-timedelta(weeks=52*20)
+        interval='1Y'
+    data=stock_df(symbol=symbol,from_date=start_date.date(),to_date=end_date.date(),series="EQ",interval=interval)
+    return data[['DATE','CLOSE']]
+
 
 @app.route('/single_stock_graphs',methods=['POST','GET'])
 def single_stock_graphs():
     stock_list=['ADANIENT','CIPLA','ITC','LT','ONGC','SBIN']
+    print("Hello1")
     if request.method=="POST":
         selected_stock=request.form.get('selected_stock')
-        years=1
-        stock_data=get_stock_data(selected_stock,years)
+        selected_time_scale=request.form.get('time_scale')
+        print("Helloo")
+        stock_data=get_stock_data(selected_stock,selected_time_scale)
+        print("Hello")
         dates=stock_data['DATE'].to_list()
         prices=stock_data['CLOSE'].to_list()
         return jsonify({'dates': dates,'prices':prices})

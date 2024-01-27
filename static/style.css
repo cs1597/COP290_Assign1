@@ -82,5 +82,8 @@ button {
     text-align: center;
 }
 
-
-
+#stock-chart {
+    border: 2px solid #2f8fce; /* Add border to the graph */
+    /* padding: 10px; */
+    margin-top: 20px; /* Add margin at the top for separation */
+}
