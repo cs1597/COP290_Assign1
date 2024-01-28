@@ -1,13 +1,14 @@
 /* style.css */
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f2f2f2;
+/* body {
+
+    font-family: 'Roboto',sans-serif;
+    background-color: #081038;
     display: flex;
-    justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
-}
+    justify-content: space-between; 
+} */
 
 .sidenav {
     height: 100%; /* Full-height: remove this if you want "auto" height */
@@ -16,7 +17,7 @@ body {
     z-index: 1; /* Stay on top */
     top: 0; /* Stay at the top */
     left: 0;
-    background-color: #efead2; 
+    background-color: #2394eb; 
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 20px;
 }
@@ -24,17 +25,17 @@ body {
 .sidenav-button {
     display: inline-block;
     padding: 10px 20px 10px 20px;
-    background-color: #efead2;
+    background-color: #2394eb;
     color: white;
     text-decoration: none;
 }
 
 .sidenav-button:hover {
-    background-color:#7f815b;
+    background-color:#5cb6ef;
 }
 
 .sidenav h1 {
-    font-family: 'Courier New', monospace;
+    font-family: 'Roboto',sans-serif;
     color:#070807;
     text-align: center;
     font-size : 20px;
@@ -42,15 +43,17 @@ body {
 }
 
 .sidenav a {
-    font-family: 'Courier New', monospace;
+    font-family: 'Roboto',sans-serif;
     padding: 6px 8px 6px 8px;
-    font-size: 16px;
-    color:#00ff08;
+    font-size: 20px;
+    color:#ffffff;
     display: block;
+
 }
 
 .sidenav a:hover {
-  color: #44a812;
+  color: #4992e6;
+  background-color: #ffffff;
 }
 
 .sidenav .closebtn {
@@ -71,7 +74,7 @@ body {
 }
 
 .nifty h1{
-    font-family: 'Courier New', monospace;
+    font-family: 'Roboto',sans-serif;
     color:#00ff08;
     /* text-align: left; */
     text-align: top;
@@ -80,7 +83,7 @@ body {
 }
 
 .nifty a {
-    font-family: 'Courier New', monospace;
+    font-family: 'Roboto',sans-serif;
     padding: 6px 8px 6px 8px;
     font-size: 16px;
     color:#00ff08;
@@ -125,50 +128,72 @@ body {
 /* style.css */
 
 .topnav {
-    height:300px; /* Full-height: remove this if you want "auto" height */
+    margin-top:75px ;
+    height:250px; /* Full-height: remove this if you want "auto" height */
     width:100%; /* Set the width of the sidebar */
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */
     z-index: 1; /* Stay on top */
     top: 0; /* Stay at the top */
     left: 0;
-    background-color: #efead2; 
+    background-color: #2394eb; 
     overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 20px;
+    padding-top: 0px;
 }
 
 .topnav form{
-    height: 200px;
-    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top:150px;
+    height: 150px;
+    width: 100%;
     position: fixed;
     z-index:1;
     top:0;
     left:0;
-    background-color: #efead2; 
+    background-color: #2394eb; 
     overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 20px;
+    padding-top: 0px;
+}
+
+.topnav select{
+    width: 300px;
+    height: 40px;
+    padding-top:5px ;
+    padding-bottom: 5px;
+    text-align: center;
+}
+
+.topnav select option{
+    font-family: 'Roboto',sans-serif;
+    font-size: 25 px;
+    text-align: center;
 }
 
 .topnav h1{
-    font-family: 'Courier New', monospace;
-    color:#070807;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-family: 'Roboto',sans-serif;
+    color:#ffffff;
     /* text-align: left; */
     text-align: center;
-    font-size : 20px;
-    padding-bottom: 20px;
+    font-size : 40px;
+    padding-bottom: 0px;
+    padding-top: 0px;
 }
 
 .topnav button {
-    font-family: 'Courier New', monospace;
+    font-family: 'Roboto',sans-serif;
     padding: 6px 8px 6px 8px;
     font-size: 16px;
-    color:#00ff08;
-    background-color:#efead2 ;
+    color:#ffffff;
+    background-color:#2394eb ;
     display: block;
 }
 
 .topnav button:hover {
-  color: #44a812;
-  background-color: #7f815b;
+  color: #ffffff;
+  background-color: #2394eb;
 }
 
 .topnav form .form-group{
@@ -194,6 +219,7 @@ body {
 
 .form-group {
     margin-bottom: 15px;
+    border-radius: 5px;
 }
 
 input[type="text"], input[type="password"] {
@@ -285,4 +311,85 @@ html, body {
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     text-align: center;
+}
+
+.top_nav_bar {
+    margin-top:0px;
+    background-color: #000000;
+    overflow: hidden;
+    height:75px; /* Full-height: remove this if you want "auto" height */
+    width:100%; /* Set the width of the sidebar */
+    position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+    z-index: 1; /* Stay on top */
+    top: 0; /* Stay at the top */
+    left: 0; 
+    padding-top: 0px;
+  }
+  
+  /* Style the links inside the navigation bar */
+  .top_nav_bar a {
+    float: right;
+    color: #1f90f3;
+    text-align: center;
+    font-family: 'Roboto',sans-serif;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 20px;
+    top:10px;
+    margin-top:10px;
+    display: block;
+    padding-top: 10px;
+  }
+  
+  /* Change the color of links on hover */
+  .top_nav_bar a:hover {
+    background-color: #1f90f3;
+    color: #ffffff;
+    border-radius:5px;
+  }
+  
+  /* Add a color to the active/current link */
+  .top_nav_bar a.active {
+    background-color: #1f90f3;
+    color: rgb(0, 0, 0);
+  }
+.top_nav_bar span{
+    color:aliceblue;
+    font-size: 50px;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    margin-top:-10px;
+    top:0px;
+    text-align: center;
+}
+
+.user-info-container {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+.user-info-container span{
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    left:0px;
+}
+.user-image {
+    width: 200px;
+    height: 200px;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.body_user{
+    font-family: 'Roboto',sans-serif;
+    background-color: #630d10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
 }
