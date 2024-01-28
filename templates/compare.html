@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -41,6 +41,52 @@
         </form>
     </div>
     <div class="plot-container">
+        {{ plot_html | safe }}
+    </div>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <title>Plotly Plot</title>
+</head>
+<body>
+    <div class="topnav">
+        <h1 class="topnav_header">Enter details</h1>
+        <form action="/compare" method="post">
+            <div class="form-group">
+                <label for="time_period" style="margin-left: 1%; font-size: 20px;">Select Timespan: </label>
+                <select name="time_period" required style="margin-top: 25px; margin-left: 0px;">
+                    <option value="1W">1 Week</option>
+                    <option value="1M">1 Month</option>
+                    <option value="1Y">1 Year</option>
+                    <option value="3Y">3 Years</option>
+                    <option value="5Y">5 Years</option>
+                </select>
+                <label for="stock" style="margin-left: 20px;font-size: 20px;">Enter Symbols (comma-separated):</label>
+                <input type="text" id="stock" name="stock" required style="width: 300px;">
+                <label for="parameter" style="margin-left: 20px;font-size: 20px;">Select Parameter: </label>
+                <select name="parameter" required style="margin-top: 25px; margin-left: 0px;">
+                    <option value="OPEN">OPEN</option>
+                    <option value="HIGH">HIGH</option>
+                    <option value="LOW">LOW</option>
+                    <option value="LTP">LTP</option>
+                    <option value="CLOSE">CLOSE</option>
+                    <option value="VOLUME">VOLUME</option>
+                    <option value="VALUE">VALUE</option>
+                    <option value="NO OF TRADES">NUMBER OF TRADES</option>
+                </select>
+            </div>
+            <div>
+                <button class="topnav_submit" type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+    <div class="analyze_plot_container">
         {{ plot_html | safe }}
     </div>
 </body>

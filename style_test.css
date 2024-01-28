@@ -11,39 +11,48 @@ body {
 }
 
 .sidenav {
-    top:10%;
-    height: 90%;
-    width:15%;
+    height: 100%;
+    width: 200px;
     position: relative;
     z-index: 1;
+    top: 0%;
     left: 0%;
     margin: 0%;
-    background-color: #299ae1;
+    background-color: #efead2;
     overflow-x: hidden;
     padding-top: 20px;
 }
 
 .sidenav-button {
     display: inline-block;
-    /* padding: 10px 20px 10px 20px; */
-    height: 5%;
-    text-align: center;
-    background-color: #299ae1;
+    padding: 10px 20px 10px 20px;
+    background-color: #efead2;
     color: white;
     text-decoration: none;
 }
 
 .sidenav-button:hover {
-    background-color: #0a1e70;
+    background-color: #7f815b;
+}
+
+.sidenav h1 {
+    font-family: 'Courier New', monospace;
+    color: #070807;
+    text-align: center;
+    font-size: 20px;
+    padding-bottom: 20px;
 }
 
 .sidenav a {
     font-family: 'Courier New', monospace;
-    text-align: center;
     padding: 6px 8px 6px 8px;
-    font-size: 20px;
-    color: #ddd;
+    font-size: 16px;
+    color: #00ff08;
     display: block;
+}
+
+.sidenav a:hover {
+    color: #44a812;
 }
 
 .sidenav .closebtn {
@@ -115,14 +124,14 @@ body {
     margin-bottom: 20px;
 }
 
-.analyze_plot_container {
-    margin-left: 10%;
+.analyze_plot-container {
+    margin-left: 20%;
     height: 600px;
-    margin-top: 12%;
+    margin-top: 20%;
 }
 
 .topnav {
-    top:10%;
+    top:13%;
     height: 23%;
     width: 100%;
     position: relative;
@@ -142,7 +151,6 @@ body {
 }
 
 .topnav_submit{
-    margin-top:2%;
     width: 100%;
     height: 20%;
     font-family: 'Courier New', monospace;
@@ -161,6 +169,11 @@ body {
     height: 40px;
     padding-top: 5px;
     padding-bottom: 5px;
+    text-align: center;
+}
+
+.plot_drop_option{
+    font-family: 'Courier New', monospace;
     text-align: center;
 }
 
