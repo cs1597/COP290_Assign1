@@ -5,20 +5,67 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<div class="sidenav">
-    <h1 style="color: #ddd;font-family: 'Courier New', monospace;text-align: center;">Homepage</h1>
-    <a href="/logout" class="sidenav-button">Logout</a>
-    <a href="/stock_graph" class="sidenav-button">Analyze Stock</a>
-    <a href="/compare" class="sidenav-button">Compare Stocks</a>
-    <a href="/filter_stocks" class="sidenav-button">Filter Stocks</a>
-</div>
-
-<div class="nifty">
-    <h1 style="margin-bottom: 0px; padding-bottom: 30px;margin-top: 5px;">NIFTY50 INDEX</h1>
-    <form action="/analyze_nifty" method="get" style="margin-left: 250px;margin-bottom: 0px;margin-top: -72px;">
-        <div class="nifty-button">
-            <button type="submit" style="font-family: 'Courier New', monospace; background-color: #efead2;">Analyze</button>
+<body>
+<div class="home_flex_1">
+    <!--topnavigator-->
+    <div class="home_flex_2">
+        <div class="sidenav">
+            <h1 style="color: #ddd;font-family: 'Courier New',  monospace;text-align: center;">Homepage</h1>
+            <a href="/logout" class="sidenav-button">Logout</a>
+            <a href="/stock_graph" class="sidenav-button">Analyze Stock</a>
+            <a href="/compare" class="sidenav-button">Compare Stocks</a>
+            <a href="/filter_stocks" class="sidenav-button">Filter Stocks</a>
         </div>
-    </form>
-</div>
+        <div class="home_flex_3">
+            <div class="nifty_box">
+                <h1 class="nifty_box_h1">Analyze Index:</h1>
+                <div class="NIFTY50_box">
+                    <form class="nifty_form" action="/analyze_nifty" method="get">
+                        <button class="nifty_submit" type="submit">
+                            NIFTY50
+                        </button>
+                    </form>
+                </div>
+                <div class="NIFTY50_box">
+                    <form class="nifty_form" action="/analyze_sensex" method="get">
+                        <button class="nifty_submit" type="submit">
+                            SENSEX
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="home_flex_4">
+                <div class="home_table_1">
+                    <h1 style="text-align: center;">Top Gainers</h1>
+                    <form action="/stock_graph" class="home_table_form_1">
+                        {% for gain, symbol in increase %}
+                            <button class="home_table_submit_1" type="submit">{{ symbol }}: {{ gain }}%</button>
+                        {% endfor %}
+                    </form>
+                </div>
+                <div class="home_table_2">
+                    <h1 style="text-align: center;">Top Losers</h1>
+                    <form action="/stock_graph" class="home_table_form_2">
+                        {% for gain, symbol in decrease %}
+                            <button class="home_table_submit_2" type="submit">{{ symbol }}: {{ gain }}%</button>
+                        {% endfor %}
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="home_flex_5">
+            <h1>news</h1>
+            <ul>
+                {% for article in top_news %}
+                    <li>
+                        <h3>{{ article.title }}</h3>
+                        <p>{{ article.description }}</p>
+                        <a href="{{ article.url }}" target="_blank">Read more</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>`
+</body>
 </html>

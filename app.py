@@ -12,6 +12,7 @@ import numpy as np
 import time
 import os
 import sys
+import requests
 import plotly.express as px
 import plotly.graph_objects as go
 colors = [
@@ -22,6 +23,7 @@ colors = [
                     'darkcyan', 'darkmagenta', 'darkyellow', 'lightcyan', 'lightmagenta', 'lightyellow', 'darkcyan', 'darkmagenta', 'darkyellow'
                 ]
 df_nifty50=pd.read_csv('ind_nifty50list.csv')
+news_api_key='650949e403754ffaacf906723c33b226'
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with your actual secret key
@@ -82,9 +84,26 @@ def dashboard():
     else:
         return redirect(url_for('index'))
     
-@app.route('/homepage')
+@app.route('/homepage', methods=['GET','POST'])
 def homepage():
-    return render_template('homepage.html', username=session['username'])
+    if request.method=="GET":
+        news_api_url = f'https://newsapi.org/v2/top-headlines?country=us&apiKey={news_api_key}'
+        response = requests.get(news_api_url)
+        data = response.json()
+        articles = data.get('articles', [])
+        end_date = datetime.now().date()
+        gainz=[]
+        start_date = end_date - timedelta(weeks=1)
+        for symbol in df_nifty50['Symbol']:
+            df_stock = stock_df(symbol=symbol, from_date=start_date, to_date=end_date, series="EQ")
+            delta=round((df_stock['CLOSE'].iloc[0]-df_stock['CLOSE'].iloc[1])*100/df_stock['CLOSE'].iloc[1],2)
+            gainz.append([delta,symbol])
+        sorted(gainz)
+        increase = sorted(gainz, key=lambda x: x[0], reverse=True)
+        decrease = sorted(gainz, key=lambda x: x[0])
+        increase = increase[:4] 
+        decrease = decrease[:4] 
+        return render_template('homepage.html', username=session['username'],increase=increase,decrease=decrease,articles=articles)
     
 @app.route('/analyze_nifty', methods=['GET','POST'])
 def analyze_nifty():
@@ -112,12 +131,19 @@ def analyze_nifty():
             xaxis_title='Date',
             yaxis_title=param,
             legend=dict(x=0, y=1, traceorder='normal'),
+            xplot_bgcolor='rgb(3, 2, 21)',
+            paper_bgcolor='rgb(3, 2, 21)',
+            font=dict(color='#299ae1',family='Courier New',size=20),
             xaxis=dict(
-                type='date',  
-                tickformat='%Y-%m-%d', 
+                type='date',
+                tickformat='%Y-%m-%d',
+                gridcolor= '#299ae1',
+            ),
+            yaxis=dict(
+                gridcolor='#299ae1',
             ),
             width=1500,
-            height=550
+            height=700
         )
         fig=go.Figure(data=trace1,layout=layout)
         plot_html=fig.to_html(full_html=False)
@@ -133,12 +159,15 @@ def analyze_nifty():
                 xaxis_title='Date',
                 yaxis_title='Close Price',
                 legend=dict(x=0, y=1, traceorder='normal'),
+                plot_bgcolor='rgb(3, 2, 21)',
+                paper_bgcolor='rgb(3, 2, 21)',
+                font=dict(color='#299ae1',family='Courier New',size=20),
                 xaxis=dict(
                     type='date',  
                     tickformat='%Y-%m-%d', 
                 ),
                 width=1500,
-                height=550
+                height=700
             )
         fig=go.Figure(data=trace1,layout=layout)
         plot_html=fig.to_html(full_html=False)
@@ -170,16 +199,49 @@ def stock_graph():
             title=f'Stock Prices for {stck}',
             xaxis_title='Date',
             yaxis_title=param,
+            plot_bgcolor='rgb(3, 2, 21)',
+            paper_bgcolor='rgb(3, 2, 21)',
+            font=dict(color='#299ae1',family='Courier New',size=20),
             legend=dict(x=0, y=1, traceorder='normal'),
             xaxis=dict(
-                type='date',  
-                tickformat='%Y-%m-%d', 
+                type='date',
+                tickformat='%Y-%m-%d',
+                gridcolor= '#299ae1',
+            ),
+            yaxis=dict(
+                gridcolor='#299ae1',
             ),
             width=1500,
-            height=550
+            height=700
         )
+        trace_candlestick = go.Candlestick(x=df['DATE'],
+                                           open=df['OPEN'],
+                                           high=df['HIGH'],
+                                           low=df['LOW'],
+                                           close=df['CLOSE'],
+                                           name=stck)
+        layout_candlestick = go.Layout(
+            title=f'Candlestick Chart for {stck}',
+            xaxis_title='Date',
+            yaxis_title='Stock Price',
+            plot_bgcolor='rgb(3, 2, 21)',
+            paper_bgcolor='rgb(3, 2, 21)',
+            font=dict(color='#299ae1',family='Courier New',size=20),
+            legend=dict(x=0, y=1, traceorder='normal'),
+            xaxis=dict(
+                type='date',
+                tickformat='%Y-%m-%d',
+                gridcolor= '#299ae1',
+            ),
+            yaxis=dict(
+                gridcolor='#299ae1',
+            ),
+            width=1500,
+            height=700
+        )
+        fig_candlestick = go.Figure(data=trace_candlestick, layout=layout_candlestick)
         fig=go.Figure(data=trace1,layout=layout)
-        plot_html=fig.to_html(full_html=False)
+        plot_html=fig_candlestick.to_html(full_html=False)
         return render_template('plot_stock.html',plot_html=plot_html)
     else:
         stck="SBIN"
@@ -192,13 +254,20 @@ def stock_graph():
             title=f'Stock Prices for {stck}',
             xaxis_title='Date',
             yaxis_title='Close Price',
+            plot_bgcolor='rgb(3, 2, 21)',
+            paper_bgcolor='rgb(3, 2, 21)',
+            font=dict(color='#299ae1',family='Courier New',size=20),
             legend=dict(x=0, y=1, traceorder='normal'),
             xaxis=dict(
-                type='date',  
-                tickformat='%Y-%m-%d', 
+                type='date',
+                tickformat='%Y-%m-%d',
+                gridcolor= '#299ae1',
+            ),
+            yaxis=dict(
+                gridcolor='#299ae1',
             ),
             width=1500,
-            height=550
+            height=700
         )
         fig=go.Figure(data=trace1,layout=layout)
         plot_html=fig.to_html(full_html=False)
@@ -238,14 +307,20 @@ def compare():
             xaxis_title='Date',
             yaxis_title=param,
             legend=dict(x=0, y=1, traceorder='normal'),
+            plot_bgcolor='rgb(3, 2, 21)',
+            paper_bgcolor='rgb(3, 2, 21)',
+            font=dict(color='#299ae1',family='Courier New',size=20),
             xaxis=dict(
                 type='date',
                 tickformat='%Y-%m-%d',
+                gridcolor= '#299ae1',
+            ),
+            yaxis=dict(
+                gridcolor='#299ae1',
             ),
             width=1500,
-            height=550
+            height=700
         )
-
         fig = go.Figure(data=plots, layout=layout)
         plot_html = fig.to_html(full_html=False)
         return render_template('compare.html', plot_html=plot_html)
@@ -260,13 +335,20 @@ def compare():
             title=f'Stock Prices for {stck}',
             xaxis_title='Date',
             yaxis_title='Close Price',
+            plot_bgcolor='rgb(3, 2, 21)',
+            paper_bgcolor='rgb(3, 2, 21)',
+            font=dict(color='#299ae1',family='Courier New',size=20),
             legend=dict(x=0, y=1, traceorder='normal'),
             xaxis=dict(
-                type='date',  
-                tickformat='%Y-%m-%d', 
+                type='date',
+                tickformat='%Y-%m-%d',
+                gridcolor= '#299ae1',
+            ),
+            yaxis=dict(
+                gridcolor='#299ae1',
             ),
             width=1500,
-            height=550
+            height=700
         )
         fig=go.Figure(data=trace1,layout=layout)
         plot_html=fig.to_html(full_html=False)

@@ -10,22 +10,62 @@ body {
     padding: 0%;
 }
 
+.home_flex_1{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+}
+
+.home_flex_2{
+    margin-top: 6%;
+    height: 88%;
+    display: flex;
+    flex-direction: row;
+}
+
+.home_flex_3{
+    display: flex;
+    flex-direction: column;
+    width: 58.5%;
+}
+
+.home_flex_4{
+    display: flex;
+    flex-direction: row;
+    background-color:rgb(3, 2, 21);
+    margin-top: 15%;
+    margin-left: 4.5%;
+    width: 91%;
+    height: 40%;
+}
+
+.home_flex_5{
+    display: flex;
+    flex-direction: column;
+    background-color:rgb(222, 2, 21);
+    margin-top: 1%;
+    margin-left: 0.5%;
+    width: 25%;
+    border-radius: 10px;
+    height: 54%;
+}
+
 .sidenav {
-    top:10%;
-    height: 90%;
+    height: 100%;
     width:15%;
     position: relative;
-    z-index: 1;
+    /* z-index: 1; */
     left: 0%;
-    margin: 0%;
     background-color: #299ae1;
-    overflow-x: hidden;
+    /* overflow-x: hidden;
+    overflow-y: hidden; */
     padding-top: 20px;
 }
 
 .sidenav-button {
     display: inline-block;
-    /* padding: 10px 20px 10px 20px; */
     height: 5%;
     text-align: center;
     background-color: #299ae1;
@@ -46,60 +86,138 @@ body {
     display: block;
 }
 
-.sidenav .closebtn {
+/* .sidenav .closebtn {
     position: absolute;
     top: 0;
     right: 25px;
     font-size: 36px;
     margin-left: 50px;
-}
+} */
 
-.nifty {
-    position: relative;
+.nifty_box{
+    position: fixed;
     display: flex;
     flex-direction: row;
-    top: 30%;
-    left: 20%;
-    height: 15%;
-    width: 20%;
-    background-color: #efead2;
+    border-radius: 10px;
+    bottom: 77.5%;
+    left: 17%;
+    height: 11%;
+    width: 55%;
+    background-color: #0a1e70
 }
 
-.nifty h1 {
-    font-family: 'Courier New', monospace;
-    color: #00ff08;
+.nifty_box_h1{
     text-align: center;
-    font-size: 30px;
-    height: 50%;
+    font-size: 40px;
+    margin-bottom: 20%;
+    margin-top: 4.7%;
+    margin-left: 2%;
 }
 
-.nifty-button{
-    top: 30%;
+.NIFTY50_box{
+    background-color:#0a1e70;
+    width: 25%;
     height: 60%;
+    margin-top: 2.7%;
+    margin-left: 3%;
 }
 
-.nifty a {
+.nifty_form{
+    background-color:#0a1e70;
+    width: 75%;
+    height: 80%;
+    margin-top: 2.7%;
+    margin-left: 12%;
+}
+
+.nifty_submit{
+    background-color:#0a1e70;
+    width: 100%;
+    height: 100%;
+    margin-top: 3.3%;
+    margin-left: 2%;
+    font-size: 35px;
+    color: #ddd;
     font-family: 'Courier New', monospace;
-    padding: 6px 8px 6px 8px;
-    font-size: 16px;
-    color: #00ff08;
-    display: block;
+    border: 0;
 }
 
-.nifty a:hover {
-    color: #44a812;
+.nifty_submit:hover{
+    background-color: #299ae1;
 }
 
-.nifty-button {
-    display: inline-block;
-    padding: 10px 20px 10px 20px;
-    background-color: #efead2;
-    color: white;
-    text-decoration: none;
+.home_table_1{
+    display: flex;
+    flex-direction: column;
+    width:49%;
+    height: 98%;
+    margin-left:0.3%;
+    background-color:rgba(27, 152, 94,1);
+    border-radius: 10px;
 }
 
-.nifty-button:hover {
-    background-color: #7f815b;
+.home_table_2{
+    display: flex;
+    flex-direction: column;
+    width:49%;
+    height: 98%;
+    margin-left:6.3%;
+    background-color:rgba(226, 79, 50,1);
+    border-radius: 10px;
+}
+
+.home_table_form_1{
+    display: flex;
+    flex-direction: column;
+    width:95%;
+    height: 76%;
+    margin-left: 2.5%;
+    background-color: rgba(27, 152, 94,1);
+    border-radius: 10px;
+}
+
+.home_table_form_2{
+    display: flex;
+    flex-direction: column;
+    width:95%;
+    height: 76%;
+    margin-left: 2.5%;
+    background-color: rgba(226, 79, 50,1);
+    border-radius: 10px;
+}
+
+.home_table_submit_1{
+    width:98%;
+    height: 98%;
+    margin-left:1%;
+    margin-top: 0.2%;
+    background-color: rgba(27, 152, 94,1);
+    font-family: 'Courier New', monospace;
+    color: #ddd;
+    font-size: 20px;
+    border-radius: 10px;
+    border: 0;
+}
+
+.home_table_submit_2{
+    width:98%;
+    height: 98%;
+    margin-left:1%;
+    margin-top: 0.2%;
+    background-color: rgba(226, 79, 50,1);
+    font-family: 'Courier New', monospace;
+    color: #ddd;
+    font-size: 20px;
+    border-radius: 10px;
+    border: 0;
+}
+
+.home_table_submit_1:hover{
+    background-color: #26ab6d;
+}
+
+.home_table_submit_2:hover{
+    background-color: rgba(220,102,76,1);
 }
 
 .login-container {
@@ -118,7 +236,7 @@ body {
 .analyze_plot_container {
     margin-left: 10%;
     height: 600px;
-    margin-top: 12%;
+    margin-top: 7%;
 }
 
 .topnav {
@@ -144,11 +262,12 @@ body {
 .topnav_submit{
     margin-top:2%;
     width: 100%;
-    height: 20%;
+    height: 30%;
     font-family: 'Courier New', monospace;
-    font-size: 20px;
+    font-size: 25px;
     text-align: center;
     color: #ddd;
+    border:0;
     background-color: #299ae1;
 }
 
@@ -163,25 +282,6 @@ body {
     padding-bottom: 5px;
     text-align: center;
 }
-
-/* .topnav select option {
-    font-family: 'Courier New', monospace;
-    font-size: 25 px;
-    text-align: center;
-} */
-
-/* .topnav button {
-    font-family: 'Courier New', monospace;
-    font-size: 16px;
-    color: #00ff08;
-    background-color: #efead2; 
-    display: block;
-} */
-
-/* .topnav button:hover {
-    color: #44a812;
-    background-color: #7f815b;
-} */
 
 .topnav .form-group {
     align-items: center;
@@ -239,13 +339,6 @@ input[type="password"] {
     border: 1px solid #ddd;
     border-radius: 5px;
     box-sizing: border-box;
-}
-
-button {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    background-color: #007bff;
 }
 
 .welcome-container {
