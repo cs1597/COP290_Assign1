@@ -87,10 +87,14 @@ def dashboard():
 @app.route('/homepage', methods=['GET','POST'])
 def homepage():
     if request.method=="GET":
-        news_api_url = f'https://newsapi.org/v2/top-headlines?country=us&apiKey={news_api_key}'
-        response = requests.get(news_api_url)
-        data = response.json()
-        articles = data.get('articles', [])
+        keywords = ['NSE','BSE','stock','share']
+        articles=[]
+        for keyword in keywords:
+            news_api_url = f'https://newsapi.org/v2/top-headlines?q={keyword}&country=in&apiKey={news_api_key}'
+            response = requests.get(news_api_url)
+            data = response.json()
+            article = data.get('articles', [])
+            articles=articles+article
         end_date = datetime.now().date()
         gainz=[]
         start_date = end_date - timedelta(weeks=1)
@@ -103,7 +107,7 @@ def homepage():
         decrease = sorted(gainz, key=lambda x: x[0])
         increase = increase[:4] 
         decrease = decrease[:4] 
-        return render_template('homepage.html', username=session['username'],increase=increase,decrease=decrease,articles=articles)
+        return render_template('homepage.html', username=session['username'],increase=increase,decrease=decrease,top_news=articles[:3])
     
 @app.route('/analyze_nifty', methods=['GET','POST'])
 def analyze_nifty():
@@ -192,28 +196,66 @@ def stock_graph():
             start_date = end_date - timedelta(weeks=5*52)
         else:
             start_date = end_date - timedelta(weeks=2*52)
-        param=request.form["parameter"]
         df = stock_df(symbol=stck, from_date=start_date, to_date=end_date, series="EQ")
-        trace1=go.Scatter(x=df['DATE'], y=df[param], mode='lines', name=stck, line=dict(color='blue'))
-        layout=go.Layout(
-            title=f'Stock Prices for {stck}',
-            xaxis_title='Date',
-            yaxis_title=param,
-            plot_bgcolor='rgb(3, 2, 21)',
-            paper_bgcolor='rgb(3, 2, 21)',
-            font=dict(color='#299ae1',family='Courier New',size=20),
-            legend=dict(x=0, y=1, traceorder='normal'),
-            xaxis=dict(
-                type='date',
-                tickformat='%Y-%m-%d',
-                gridcolor= '#299ae1',
-            ),
-            yaxis=dict(
-                gridcolor='#299ae1',
-            ),
-            width=1500,
-            height=700
-        )
+        param=request.form["parameter"]
+        if param!='Candlestick':
+            trace1=go.Scatter(x=df['DATE'], y=df[param], mode='lines', name=stck, line=dict(color='blue'))
+            layout=go.Layout(
+                title=f'Stock Prices for {stck}',
+                xaxis_title='Date',
+                yaxis_title=param,
+                plot_bgcolor='rgb(3, 2, 21)',
+                paper_bgcolor='rgb(3, 2, 21)',
+                font=dict(color='#299ae1',family='Courier New',size=20),
+                legend=dict(x=0, y=1, traceorder='normal'),
+                xaxis=dict(
+                    type='date',
+                    tickformat='%Y-%m-%d',
+                    gridcolor= '#299ae1',
+                ),
+                yaxis=dict(
+                    gridcolor='#299ae1',
+                ),
+                width=1500,
+                height=700
+            )
+            fig=go.Figure(data=trace1,layout=layout)
+        else:
+            trace_candlestick = go.Candlestick(x=df['DATE'],
+                                            open=df['OPEN'],
+                                            high=df['HIGH'],
+                                            low=df['LOW'],
+                                            close=df['CLOSE'],
+                                            name=stck)
+            layout_candlestick = go.Layout(
+                title=f'Candlestick Chart for {stck}',
+                xaxis_title='Date',
+                yaxis_title='Stock Price',
+                plot_bgcolor='rgb(3, 2, 21)',
+                paper_bgcolor='rgb(3, 2, 21)',
+                font=dict(color='#299ae1',family='Courier New',size=20),
+                legend=dict(x=0, y=1, traceorder='normal'),
+                xaxis=dict(
+                    type='date',
+                    tickformat='%Y-%m-%d',
+                    gridcolor= '#299ae1',
+                ),
+                yaxis=dict(
+                    gridcolor='#299ae1',
+                ),
+                width=1500,
+                height=700
+            )
+            fig= go.Figure(data=trace_candlestick, layout=layout_candlestick)
+        plot_html=fig.to_html(full_html=False)
+        return render_template('plot_stock.html',plot_html=plot_html)
+    else:
+        stck="SBIN"
+        if 'selected_symbol' in request.args:
+            stck=request.args['selected_symbol']
+        end_date = datetime.now().date()
+        start_date = end_date - timedelta(weeks=52) 
+        df = stock_df(symbol=stck, from_date=start_date, to_date=end_date, series="EQ")
         trace_candlestick = go.Candlestick(x=df['DATE'],
                                            open=df['OPEN'],
                                            high=df['HIGH'],
@@ -240,38 +282,8 @@ def stock_graph():
             height=700
         )
         fig_candlestick = go.Figure(data=trace_candlestick, layout=layout_candlestick)
-        fig=go.Figure(data=trace1,layout=layout)
         plot_html=fig_candlestick.to_html(full_html=False)
-        return render_template('plot_stock.html',plot_html=plot_html)
-    else:
-        stck="SBIN"
-        end_date = datetime.now().date()
-        start_date = end_date - timedelta(weeks=2*52) 
-        param="CLOSE"
-        df = stock_df(symbol=stck, from_date=start_date, to_date=end_date, series="EQ")
-        trace1=go.Scatter(x=df['DATE'], y=df[param], mode='lines', name=stck, line=dict(color='blue'))
-        layout=go.Layout(
-            title=f'Stock Prices for {stck}',
-            xaxis_title='Date',
-            yaxis_title='Close Price',
-            plot_bgcolor='rgb(3, 2, 21)',
-            paper_bgcolor='rgb(3, 2, 21)',
-            font=dict(color='#299ae1',family='Courier New',size=20),
-            legend=dict(x=0, y=1, traceorder='normal'),
-            xaxis=dict(
-                type='date',
-                tickformat='%Y-%m-%d',
-                gridcolor= '#299ae1',
-            ),
-            yaxis=dict(
-                gridcolor='#299ae1',
-            ),
-            width=1500,
-            height=700
-        )
-        fig=go.Figure(data=trace1,layout=layout)
-        plot_html=fig.to_html(full_html=False)
-        return render_template('plot_stock.html') 
+        return render_template('plot_stock.html',plot_html=plot_html) 
 
 @app.route('/compare', methods=['GET', 'POST'])
 def compare():

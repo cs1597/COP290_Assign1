@@ -37,33 +37,33 @@
             <div class="home_flex_4">
                 <div class="home_table_1">
                     <h1 style="text-align: center;">Top Gainers</h1>
-                    <form action="/stock_graph" class="home_table_form_1">
+                    <form action="/stock_graph" class="home_table_form_1" method="get">
                         {% for gain, symbol in increase %}
-                            <button class="home_table_submit_1" type="submit">{{ symbol }}: {{ gain }}%</button>
+                            <button class="home_table_submit_1" type="submit" name="selected_symbol" value="{{ symbol }}">{{ symbol }}: {{ gain }}%</button>
                         {% endfor %}
                     </form>
                 </div>
                 <div class="home_table_2">
                     <h1 style="text-align: center;">Top Losers</h1>
-                    <form action="/stock_graph" class="home_table_form_2">
+                    <form action="/stock_graph" class="home_table_form_2" method="get">
                         {% for gain, symbol in decrease %}
-                            <button class="home_table_submit_2" type="submit">{{ symbol }}: {{ gain }}%</button>
+                            <button class="home_table_submit_2" type="submit" name="selected_symbol" value="{{ symbol }}">{{ symbol }}: {{ gain }}%</button>
                         {% endfor %}
                     </form>
                 </div>
             </div>
         </div>
         <div class="home_flex_5">
-            <h1>news</h1>
-            <ul>
+            <h1 style="text-align: center;">Top News</h1>
+            <div>
                 {% for article in top_news %}
-                    <li>
-                        <h3>{{ article.title }}</h3>
-                        <p>{{ article.description }}</p>
-                        <a href="{{ article.url }}" target="_blank">Read more</a>
-                    </li>
+                    <div>
+                        <h3 style="text-align: center; margin-right: 5%; margin-left: 5%;">{{ article.title }}</h3>
+                        <p style="text-align: center; margin-right: 5%; margin-left: 5%;">{{ article.description }}</p>
+                        <a style="margin-left: 40%;" href="{{ article.url }}" target="_blank">Read more</a>
+                    </div>
                 {% endfor %}
-            </ul>
+            </div>
         </div>
     </div>
 </div>`
