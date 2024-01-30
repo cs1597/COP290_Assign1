@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <title>Update User Info</title>
+    </head>
+</html>
+<body>
+    <div class="wrapper">
+        <div class="details_box">
+            <div class="details-header">
+                <a >Edit Details</a>
+            </div>
+            <div class="input_box">
+                <i class="bx bxs-user icon icon-update_details"></i>
+                <input type="text" id="user" class="input-field" required>
+                <label for="user" class="edit_label">Username</label>
+                
+            </div>
+            <div class="input_box">
+                <i class="bx bx-user-circle icon icon-update_details"></i>  
+                <input type="text" id="name" class="input-field" required>
+                <label for="name" class="edit_label">Full name</label>
+                
+            </div>
+            <div class="input_box">
+                <i class="bx bx-envelope icon icon-update_details"></i>
+                <input type="text" id="email" class="input-field" required>
+                <label for="email" class="edit_label">Email</label>
+                
+            </div>
+            <div class="input_box">
+                <i class="bx bxs-phone icon icon-update_details"></i>
+                <input type="text" id="mobile" class="input-field" required>
+                <label for="mobile" class="edit_label">Mobile No.</label>
+                
+            </div>
+            <div class="remember-forgot">
+                <div class="forgot">
+                    <a href="/change_password" class="forgot">Forgot password?</a>
+                </div>
+            </div>
+            <div class="input_box">
+                <input type="submit" class="input-submit" value="Update"> 
+            </div>
+        </div>
+
+    </div>
+</body>

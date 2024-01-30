@@ -1,0 +1,332 @@
+/* style.css */
+body {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(3, 2, 21);
+    font-family: 'Courier New', monospace;
+    color: #ddd;
+    margin: 0;
+    padding: 0%;
+}
+
+.sidenav {
+    height: 100%;
+    width: 200px;
+    position: relative;
+    z-index: 1;
+    top: 0%;
+    left: 0%;
+    margin: 0%;
+    background-color: #efead2;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+.sidenav-button {
+    display: inline-block;
+    padding: 10px 20px 10px 20px;
+    background-color: #efead2;
+    color: white;
+    text-decoration: none;
+}
+
+.sidenav-button:hover {
+    background-color: #7f815b;
+}
+
+.sidenav h1 {
+    font-family: 'Courier New', monospace;
+    color: #070807;
+    text-align: center;
+    font-size: 20px;
+    padding-bottom: 20px;
+}
+
+.sidenav a {
+    font-family: 'Courier New', monospace;
+    padding: 6px 8px 6px 8px;
+    font-size: 16px;
+    color: #00ff08;
+    display: block;
+}
+
+.sidenav a:hover {
+    color: #44a812;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+.nifty {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    top: 30%;
+    left: 20%;
+    height: 15%;
+    width: 20%;
+    background-color: #efead2;
+}
+
+.nifty h1 {
+    font-family: 'Courier New', monospace;
+    color: #00ff08;
+    text-align: center;
+    font-size: 30px;
+    height: 50%;
+}
+
+.nifty-button{
+    top: 30%;
+    height: 60%;
+}
+
+.nifty a {
+    font-family: 'Courier New', monospace;
+    padding: 6px 8px 6px 8px;
+    font-size: 16px;
+    color: #00ff08;
+    display: block;
+}
+
+.nifty a:hover {
+    color: #44a812;
+}
+
+.nifty-button {
+    display: inline-block;
+    padding: 10px 20px 10px 20px;
+    background-color: #efead2;
+    color: white;
+    text-decoration: none;
+}
+
+.nifty-button:hover {
+    background-color: #7f815b;
+}
+
+.login-container {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.login-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.analyze_plot-container {
+    margin-left: 20%;
+    height: 600px;
+    margin-top: 20%;
+}
+
+.topnav {
+    top:13%;
+    height: 23%;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    left: 0;
+    background-color: #299ae1;
+    overflow-x: hidden;
+    padding-top: 0px;
+}
+
+.topnav_header{
+    top: 10%;
+    text-align: center;
+    font-size: 30px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+
+.topnav_submit{
+    width: 100%;
+    height: 20%;
+    font-family: 'Courier New', monospace;
+    font-size: 20px;
+    text-align: center;
+    color: #ddd;
+    background-color: #299ae1;
+}
+
+.topnav_submit:hover{
+    background-color: #0a1e70;
+}
+
+.topnav select {
+    width: 300px;
+    height: 40px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: center;
+}
+
+.plot_drop_option{
+    font-family: 'Courier New', monospace;
+    text-align: center;
+}
+
+/* .topnav select option {
+    font-family: 'Courier New', monospace;
+    font-size: 25 px;
+    text-align: center;
+} */
+
+/* .topnav button {
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    color: #00ff08;
+    background-color: #efead2; 
+    display: block;
+} */
+
+/* .topnav button:hover {
+    color: #44a812;
+    background-color: #7f815b;
+} */
+
+.topnav .form-group {
+    align-items: center;
+    margin-top: 0.2%;
+    padding: 1px;
+}
+
+.filter-box {
+    margin-top: 100px;
+    width: 400px;
+    height: 200px;
+    background-color: #007bff;
+}
+
+.filter-box form {
+    font-family: 'Courier New', monospace;
+    color: #00ff08;
+    display: flex;
+    flex-direction: column;
+    /* text-align: left; */
+    text-align: center;
+    font-size: 12px;
+    padding-bottom: 20px;
+}
+
+h2 {
+    color: #333;
+}
+
+table {
+    border-collapse: collapse;
+    width: 500px;
+    margin-top: 20px;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: #007bff;
+}
+
+.welcome-container {
+    text-align: center;
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    margin: auto;
+}
+
+.welcome-container h1 {
+    margin-bottom: 20px;
+}
+
+.logout-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.logout-button:hover {
+    background-color: #c82333;
+}
+
+.logo {
+    width: 100px;
+    height: auto;
+    margin-top: 20px;
+}
+
+/* Consolidate sidebar styles */
+.sidebar {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    background-color: #28d3dc;
+    padding-top: 20px;
+    color: #fff;
+}
+
+.content {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.graph {
+    width: 80%;
+    max-width: 800px;
+}
+
+/* Add these styles to limit the max width of the graph container */
+.plotly-graph {
+    max-width: 800px;
+    /* Set your preferred maximum width */
+    width: 100%;
+    margin: auto;
+    /* Center the graph within the container */
+}
+
+.drop-down {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}

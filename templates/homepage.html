@@ -4,21 +4,35 @@
     <title>Welcome</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
+<div class="top_nav_bar">
+    <div class="icon">
+        <h2 class="logo">Trade Well</h2>
+    </div>
+    <div class="menu">
+        <ul>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+            <a href="/homepage" class="top_nav_button">Home</a>
+            <a href="/about" class="top_nav_button">About</a>
+            <a href="/settings" class="top_nav_button">Settings</a>
+            <a href="/logout" class="top_nav_button">Logout</a>
+            <a href="/user_info" class="fas fa-user"></a>
+        </ul>
+    </div>
+</div>
 <div class="sidenav">
-    <h1>Homepage</h1>
+    <h1 style="color: #ddd;font-family: 'Courier New', monospace;text-align: center;">Homepage</h1>
     <a href="/logout" class="sidenav-button">Logout</a>
     <a href="/stock_graph" class="sidenav-button">Analyze Stock</a>
     <a href="/compare" class="sidenav-button">Compare Stocks</a>
+    <a href="/filter_stocks" class="sidenav-button">Filter Stocks</a>
 </div>
 
 <div class="nifty">
-    <h1>NIFTY50 INDEX</h1>
-    <form action="/analyze_nifty" method="post">
+    <h1 style="margin-bottom: 0px; padding-bottom: 30px;margin-top: 5px;">NIFTY50 INDEX</h1>
+    <form action="/analyze_nifty" method="get" style="margin-left: 250px;margin-bottom: 0px;margin-top: -72px;">
         <div class="nifty-button">
-            <button type="submit">Analyze</button>
+            <button type="submit" style="font-family: 'Courier New', monospace; background-color: #efead2;">Analyze</button>
         </div>
     </form>
 </div>
-
 </html>

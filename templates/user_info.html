@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <title>Plotly Plot</title>
+</head>
+
+<body>
+    <div class="top_nav_bar">
+        <div class="icon">
+            <h2 class="logo">Trade Well</h2>
+        </div>
+        <div class="menu">
+            <ul>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+                <a href="/homepage" class="top_nav_button">Home</a>
+                <a href="/about" class="top_nav_button">About</a>
+                <a href="/settings" class="top_nav_button">Settings</a>
+                <a href="/logout" class="top_nav_button">Logout</a>
+                <a href="/user_info" class="fas fa-user"></a>
+            </ul>
+        </div>
+    </div>
+    <div class="side_info_bar">
+        <div class="user_photo">
+            <img src="static\9131529.png">
+        </div>
+        <div class="user_data">
+            <ul>
+                <li> Name: Vishakha</li>
+                <li> Mobile Number: 7300009967</li>
+                <li> Username: {{username}}</li>
+                <a href="/change_user_info" class="change_info_button">Update User Details</a>
+            </ul>
+        </div>
+    </div>
+    
+</body>
+</html>
