@@ -3,16 +3,24 @@
 <head>
     <title>About Us</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-    <style>
-        body {
-            background: url('background.jpeg') no-repeat center center fixed; 
-            background-size: cover;
-        }
-    </style>
 </head>
-<body>
+<body style="background-image:url('background.jpeg') no-repeat center center fixed; background-size: cover;">
+    <div class="top_nav_bar">
+        <div class="top_nav_icon">
+            <h2 class="top_nav_logo">tradescope</h2>
+        </div>
+        <div class="top_nav_menu">
+            <ul>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+                <a href="/homepage" class="top_nav_button">Home</a>
+                <a href="/about" class="top_nav_button">About</a>
+                <a href="/settings" class="top_nav_button">Settings</a>
+                <a href="/logout" class="top_nav_button">Logout</a>
+                <a href="/user_info" class="fas fa-user"></a>
+            </ul>
+        </div>
+    </div>
     <div class="home_flex_1">
-        <!--topnavigator-->
         <div class="about_flex">
             <div style="text-align: center;" class="about_content">
                 <h1>Welcome to TradeScope</h1>

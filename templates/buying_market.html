@@ -47,28 +47,39 @@
             </div>
         </form>
     </div>
-    <div class="analyze_plot_container">
-        <h2 style="text-align: center; color: #ddd; margin-top: 7%;">Filtered Stock Symbols</h2>
+    <div class="balance_box">
+        <h1>Current Balance: {{ balance }}</h1>
+    </div>
+    <div class="analyze_plot_container" style="margin-top: 0;">
+        <h2 style="text-align: center; color: #ddd;">Filtered Stock Symbols</h2>
             <table class="filtered_stock_table">
                 <thead>
                     <tr>
                         <th>Symbol</th>
-                        <th>{{ param }}</th>
+                        <th>Last Price</th>
                         <th>Analyze</th>
+                        <th>Buy</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for symbol, parameter in filtered_list.items() %}
-                    <form action="/stock_graph" method="get">
+                    {% for symbol, last_price in filtered_list.items() %}
                         <tr>
-                            <td style="width: 40%;">{{ symbol }}</td>
-                            <td style="width: 40%;">{{ parameter }}</td>
-                            <td style="width:30%">
-                            <input type="hidden" name="selected_symbol" value="{{ symbol }}">
-                            <button class="filter_table_submit_1" type="submit">View Graph</button>
+                            <td style="width: 30%;">{{ symbol }}</td>
+                            <td style="width: 30%;">{{ last_price }}</td>
+                            <td style="width:20%;">
+                            <form style="height: 100%; width: 100%; padding: 0;" action="/stock_graph" method="get">
+                                <input type="hidden" name="selected_symbol" value="{{ symbol }}">
+                                <button class="filter_table_submit_1" type="submit">Analyze</button>
+                            </form>
+                            </td>
+                            <td style="width:20%;">
+                            <form style="height: 100%; width: 100%; padding: 0;" action="/buy_stocks" method="get">
+                                <input type="hidden" name="selected_symbol" value="{{ symbol }}">
+                                <input type="hidden" name="last_price" value="{{ last_price }}">
+                                <button class="filter_table_submit_1" type="submit">Buy Stocks</button>
+                            </form>
                             </td>
                         </tr>
-                    </form>
                     {% endfor %}
                 </tbody>
             </table>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
     <title>Login</title>
@@ -19,6 +19,42 @@
             </div>
         </form>
         <p>Don't have an account? <a href="/register">Register here</a></p>
+    </div>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <title>Login</title>
+    </head>
+<body>
+    <div class="wrapper">
+        <form action="/login" style="width:100%; height:100%" method="post">
+            <div class="details_box_pass">
+                <div class="details-header">
+                    <a >Login</a>
+                </div>
+                <div class="input_box_pass">
+                    <i class="bx bx-user icon icon-update_details"></i>
+                    <input type="text" id="username" name="username" class="input-field" required>
+                    <label for="username" class="edit_label">Username</label> 
+                </div>
+                <div class="input_box_pass">
+                    <i class="bx bx-lock icon icon-update_details"></i>  
+                    <input type="password" id="password" name="password" class="input-field" required>
+                    <label for="password" class="edit_label">Password</label>
+                </div> 
+                <div class="input_box_pass">
+                    <input type="submit" class="input-submit" value="Submit"> 
+                </div>
+                <p>Don't have an account? <a href="/register" style="color:cadetblue">Register here</a></p>
+            </div>
+        </form>
     </div>
 </body>
 </html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <title>Transaction</title>
+    </head>
+
+<body>
+    <div class="wrapper">
+        <div class="details_box_pass" style="margin-left: 0%; margin-top: 0%;">
+            <div class="details-header">
+                <a >Transaction Summary</a>
+            </div>
+            <div class="input_box_pass" style="margin-top: 10%; text-align: center;">
+                {% if valid %}
+                    <h2 style="color:#ddd">Transaction Successful!!</h2>
+                {% else %} 
+                    <h2 style="color:#ddd">Insufficient Balance</h2>
+                {% endif %}
+            </div>
+            <div class="input_box_pass">
+                <h2 style="color: #ddd; text-align: center;">Current Balance : Rs{{ balance }}</h2>
+            </div> 
+            <div class="input_box_pass" style="background-color: #119adf; border-radius: 10px; height: 30%;">
+                <a href="/buying_market" style="font-size: 30px; text-align: center;"> Continue Trading </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
