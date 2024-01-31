@@ -505,15 +505,17 @@ ul :hover{
 }
 .details_box{
     position:absolute;
-    width:25%;
+    width:20%;
     height:60%;
+    margin-left: 36%;
+    margin-top:7%;
     backdrop-filter: blur(35px);
     border: 2px solid #ffffff;
     border-radius:15px;
     padding-top: 1%;
     padding-left: 3%;
     padding-right:3%;
-    padding-bottom: 3%;
+    padding-bottom: 1%;
     color:#ffffff;
     box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1);
     display:flex;
@@ -522,8 +524,10 @@ ul :hover{
 
 .details_box_pass{
     position:absolute;
-    width:25%;
-    height:35%;
+    width:20%;
+    height:45%;
+    margin-left: 35%;
+    margin-top:10%;
     backdrop-filter: blur(35px);
     border: 2px solid #ffffff;
     border-radius:15px;
@@ -588,17 +592,18 @@ ul :hover{
     outline:none;
 }
 
+
 .edit_label{
     position:absolute;
     transition: 0.2s;
     margin-left:2%; 
-    margin-top:4%;  
-    font-size:150%;  
+    margin-top:7%;  
+    font-size:120%;  
 }
 .input-field:focus ~ .edit_label,
-.input-filed:valid ~ .edit_label{   
+.input-field:valid ~ .edit_label{   
     position:absolute;
-    top:-25%;
+    top:-40%;
     left: 0%;
     font-size: 14px;
     background-color: #119adf;
@@ -608,9 +613,9 @@ ul :hover{
 }
 .icon-update_details{
     position:absolute; 
-    margin-left:90%;     
+    margin-left:87%;     
     font-size:30px;
-    margin-top:4%;   
+    margin-top:6%;   
 }
 
 .forgot a{
@@ -637,7 +642,7 @@ ul :hover{
     border-radius:30px;
     cursor:pointer;
     transition:.3s;
-    margin-bottom: -2%;
+    margin-bottom: -4%;
 }
 
 .input-submit:hover{

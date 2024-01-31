@@ -41,10 +41,14 @@ class User(db.Model):
     full_name= db.Column(db.String(100), nullable=True)
     mobile_number=db.Column(db.String(10),nullable=True)
     email=db.Column(db.String(100),nullable=True)
+    watchlist=db.column(db.Text)
 
 # Initialize Database within Application Context
 with app.app_context():
     db.create_all()
+# with app.app_context():
+#     if not os.path.exists('users.db'):
+#         db.create_all()
 
 migrate = Migrate(app,db)
 @app.route('/')
@@ -57,7 +61,6 @@ def register():
         username = request.form['username']
         password = request.form['password']
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-
         new_user = User(username=username, password_hash=hashed_password)
         db.session.add(new_user)
         db.session.commit()
@@ -72,12 +75,13 @@ def login():
     username = request.form['username']
     password = request.form['password']
     user = User.query.filter_by(username=username).first()
-
     if user and check_password_hash(user.password_hash, password):
         session['user_id'] = user.id
         session['username'] = user.username
-        return redirect(url_for('dashboard'))
+        print("hello")
+        return redirect(url_for('homepage'))
     else:
+        print("hellooo")
         flash('Invalid username or password')
         return redirect(url_for('index'))
 
@@ -349,17 +353,33 @@ def filter_stocks():
     
 @app.route('/logout')
 def logout():
-    session.pop('user_id', None)
-    session.pop('username', None)
+    # session.pop('user_id', None)
+    # session.pop('username', None)
     return redirect(url_for('index'))
 
 
 @app.route('/user_info')
 def user_info():
-    return render_template('user_info.html', username=session['username'])
+    user = User.query.filter_by(username=session['username']).first()
+    return render_template('user_info.html', username=session['username'], mobile_number=user.mobile_number,full_name=user.full_name,email=user.email)
 
-@app.route('/change_user_info')
+@app.route('/change_user_info',methods=['POST','GET'])
 def change_user_info():
+    if request.method == 'POST':
+        username = request.form['username']
+        full_name=request.form['full_name']
+        email=request.form['email']
+        mobile_number=request.form['mobile_number']
+        user = User.query.filter_by(username=session['username']).first()
+        user.username=username
+        user.full_name=full_name
+        user.email=email
+        user.mobile_number=mobile_number
+        db.session.commit()
+        session['username']=username
+        flash('Details Updated Succesfully')
+        return redirect(url_for('user_info'))
+    
     return render_template('change_user_info.html',username=session['username'])
 
 @app.route('/change_password')
