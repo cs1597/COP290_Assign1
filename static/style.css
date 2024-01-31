@@ -35,7 +35,7 @@ body {
     display: flex;
     flex-direction: row;
     background-color:rgb(3, 2, 21);
-    margin-top: 15%;
+    margin-top: 60%;
     margin-left: 4.5%;
     width: 91%;
     height: 40%;
@@ -50,6 +50,19 @@ body {
     width: 25%;
     border-radius: 10px;
     height: 100%;
+}
+
+.about_flex{
+    display: flex;
+    flex-direction: column;
+    background-color:#299ae1;
+    margin-top: 12%;
+    margin-left: 25%;
+    width: 50%;
+    border-radius: 10px;
+    padding: 1%;
+    font-size: 20px;
+    height: 60%;
 }
 
 .sidenav {
@@ -98,10 +111,10 @@ body {
     position: fixed;
     display: flex;
     flex-direction: row;
-    border-radius: 10px;
-    bottom: 77.5%;
+    /* border-radius: 10px; */
+    bottom: 33%;
     left: 17%;
-    height: 11%;
+    height: 55%;
     width: 55%;
     background-color: #0a1e70
 }
@@ -140,6 +153,7 @@ body {
     color: #ddd;
     font-family: 'Courier New', monospace;
     border: 0;
+    border-radius: 10px;
 }
 
 .nifty_submit:hover{
@@ -282,7 +296,6 @@ body {
     padding-bottom: 5px;
     text-align: center;
 }
-
 .topnav .form-group {
     align-items: center;
     margin-top: 0.2%;
@@ -293,7 +306,7 @@ body {
     margin-top: 100px;
     width: 400px;
     height: 200px;
-    background-color: #007bff;
+    background-color: #0a1e70;
 }
 
 .filter-box form {
@@ -307,25 +320,107 @@ body {
     padding-bottom: 20px;
 }
 
+.watchlist_button{
+    margin-left: 5%;
+    margin-top: 6.4%; 
+    width: 3%;
+    height: 50px;
+    background-color:  #299ae1;
+    border-radius: 10px;
+}
+
+.watchlist_submit{
+    width: 100%;
+    height: 100%;
+    background-color:  #299ae1;
+    border-radius: 10px;
+    border: 0;
+    padding: 0;
+}
+
+.watchlist_submit:hover{
+    background-color:  #ddd;
+}
+
+.icon_box{
+    margin-top: 0%;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    padding-top: 15%;
+    border-radius: 10px;     
+    font-size:30px;
+    color:#ddd
+}
+
+.icon_box:hover{
+    color:#299ae1;
+}
+
+.plot_flex_box{
+    display: flex;
+    flex-direction: row;
+}
+
+.analyze_plot_container {
+    /* margin-left: 10%; */
+    width:80%
+}
+
+.filtered_stock_table {
+    width: 90%;
+    border-collapse: collapse;
+    margin-top: 1%;
+    margin-left: 5%;
+}
+
+.filtered_stock_table th, .filtered_stock_table td {
+    padding: 8px;
+    height: 40px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.filtered_stock_table th {
+    height: 10%;
+    height: 50px;
+    background-color: #0a1e70;
+    font-size: 25px;
+}
+
+.filtered_stock_table tr:nth-child(even) {
+    background-color: #299ae1;
+    height: 10px;
+}
+
+.filtered_stock_table tr:nth-child(odd) {
+    background-color: #299ae1;
+    height: 10px;
+}
+
+.filtered_stock_table tr:hover {
+    background-color: #0a1e70;
+}
+
+.filter_table_submit_1{
+    width:98%;
+    height: 98%;
+    margin-left:1%;
+    margin-top: 0.2%;
+    background-color: #299ae1;
+    font-family: 'Courier New', monospace;
+    color: #ddd;
+    font-size: 20px;
+    border-radius: 10px;
+    border: 0;
+}
+
+.filter_table_submit_1:hover{
+    background-color: #0a1e70;
+}
+
 h2 {
     color: #333;
-}
-
-table {
-    border-collapse: collapse;
-    width: 500px;
-    margin-top: 20px;
-}
-
-th,
-td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-th {
-    background-color: #f2f2f2;
 }
 
 .form-group {

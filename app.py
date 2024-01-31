@@ -15,13 +15,17 @@ import sys
 import requests
 import plotly.express as px
 import plotly.graph_objects as go
+from bsedata.bse import BSE
+
+# bse=BSE(update_codes=True)
+# print(bse.getScripCodes())
 colors = [
-                    'blue', 'red', 'green', 'purple', 'orange', 'brown', 'cyan', 'magenta', 'yellow', 'black',
-                    'gray', 'pink', 'lightblue', 'lightcoral', 'lightgreen', 'lightgray', 'lightpink', 'lightyellow', 'darkblue', 'darkred',
-                    'darkgreen', 'darkpurple', 'darkorange', 'darkbrown', 'darkcyan', 'darkmagenta', 'darkyellow', 'darkgray', 'lightcyan',
-                    'lightmagenta', 'lightyellow', 'darkcyan', 'darkmagenta', 'darkyellow', 'lightcyan', 'lightmagenta', 'lightyellow',
-                    'darkcyan', 'darkmagenta', 'darkyellow', 'lightcyan', 'lightmagenta', 'lightyellow', 'darkcyan', 'darkmagenta', 'darkyellow'
-                ]
+                'blue', 'red', 'green', 'purple', 'orange', 'brown', 'cyan', 'magenta', 'yellow', 'black',
+                'gray', 'pink', 'lightblue', 'lightcoral', 'lightgreen', 'lightgray', 'lightpink', 'lightyellow', 'darkblue', 'darkred',
+                'darkgreen', 'darkpurple', 'darkorange', 'darkbrown', 'darkcyan', 'darkmagenta', 'darkyellow', 'darkgray', 'lightcyan',
+                'lightmagenta', 'lightyellow', 'darkcyan', 'darkmagenta', 'darkyellow', 'lightcyan', 'lightmagenta', 'lightyellow',
+                'darkcyan', 'darkmagenta', 'darkyellow', 'lightcyan', 'lightmagenta', 'lightyellow', 'darkcyan', 'darkmagenta', 'darkyellow'
+            ]
 df_nifty50=pd.read_csv('ind_nifty50list.csv')
 news_api_key='650949e403754ffaacf906723c33b226'
 
@@ -72,21 +76,36 @@ def login():
     if user and check_password_hash(user.password_hash, password):
         session['user_id'] = user.id
         session['username'] = user.username
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('homepage'))
     else:
         flash('Invalid username or password')
-        return redirect(url_for('index'))
-
-@app.route('/dashboard')
-def dashboard():
-    if 'user_id' in session:
-        return render_template('welcome.html', username=session['username'])
-    else:
         return redirect(url_for('index'))
     
 @app.route('/homepage', methods=['GET','POST'])
 def homepage():
     if request.method=="GET":
+        end_date = datetime.now().date()
+        start_date = end_date - timedelta(days=365 * 2)
+        df = index_df(symbol="NIFTY 50", from_date=start_date, to_date=end_date)
+        df.sort_values(by=['HistoricalDate'],inplace=True)
+        trace1=go.Scatter(x=df['HistoricalDate'], y=df['CLOSE'], mode='lines', name="NIFTY 50", line=dict(color='blue'))
+        layout=go.Layout(
+                title=f'Index price for NIFTY 50',
+                xaxis_title='Date',
+                yaxis_title='Close Price',
+                legend=dict(x=0, y=1, traceorder='normal'),
+                plot_bgcolor='rgb(3, 2, 21)',
+                paper_bgcolor='rgb(3, 2, 21)',
+                font=dict(color='#299ae1',family='Courier New',size=20),
+                xaxis=dict(
+                    type='date',  
+                    tickformat='%Y-%m-%d', 
+                ),
+                width=1030,
+                height=600
+            )
+        fig=go.Figure(data=trace1,layout=layout)
+        plot_html=fig.to_html(full_html=False)
         keywords = ['NSE','BSE','stock','share']
         articles=[]
         for keyword in keywords:
@@ -107,7 +126,7 @@ def homepage():
         decrease = sorted(gainz, key=lambda x: x[0])
         increase = increase[:4] 
         decrease = decrease[:4] 
-        return render_template('homepage.html', username=session['username'],increase=increase,decrease=decrease,top_news=articles[:3])
+        return render_template('homepage.html', username=session['username'],increase=increase,decrease=decrease,top_news=articles[:3], plot_html=plot_html)
     
 @app.route('/analyze_nifty', methods=['GET','POST'])
 def analyze_nifty():
@@ -135,7 +154,7 @@ def analyze_nifty():
             xaxis_title='Date',
             yaxis_title=param,
             legend=dict(x=0, y=1, traceorder='normal'),
-            xplot_bgcolor='rgb(3, 2, 21)',
+            plot_bgcolor='rgb(3, 2, 21)',
             paper_bgcolor='rgb(3, 2, 21)',
             font=dict(color='#299ae1',family='Courier New',size=20),
             xaxis=dict(
@@ -180,75 +199,78 @@ def analyze_nifty():
 @app.route('/stock_graph', methods=['GET', 'POST'])
 def stock_graph():
     if request.method == 'POST':
-        stck=request.form['stock']
-        session["selected_stock"]=stck
-        time_period = request.form['time_period']
-        end_date = datetime.now().date()
-        if time_period == '1W':
-            start_date = end_date - timedelta(weeks=1)
-        elif time_period == '1M':
-            start_date = end_date - timedelta(weeks=4)
-        elif time_period == '1Y':
-            start_date = end_date - timedelta(weeks=52)
-        elif time_period == '3Y':
-            start_date = end_date - timedelta(weeks=3*52)
-        elif time_period == '5Y':
-            start_date = end_date - timedelta(weeks=5*52)
-        else:
-            start_date = end_date - timedelta(weeks=2*52)
-        df = stock_df(symbol=stck, from_date=start_date, to_date=end_date, series="EQ")
-        param=request.form["parameter"]
-        if param!='Candlestick':
-            trace1=go.Scatter(x=df['DATE'], y=df[param], mode='lines', name=stck, line=dict(color='blue'))
-            layout=go.Layout(
-                title=f'Stock Prices for {stck}',
-                xaxis_title='Date',
-                yaxis_title=param,
-                plot_bgcolor='rgb(3, 2, 21)',
-                paper_bgcolor='rgb(3, 2, 21)',
-                font=dict(color='#299ae1',family='Courier New',size=20),
-                legend=dict(x=0, y=1, traceorder='normal'),
-                xaxis=dict(
-                    type='date',
-                    tickformat='%Y-%m-%d',
-                    gridcolor= '#299ae1',
-                ),
-                yaxis=dict(
-                    gridcolor='#299ae1',
-                ),
-                width=1500,
-                height=700
-            )
-            fig=go.Figure(data=trace1,layout=layout)
-        else:
-            trace_candlestick = go.Candlestick(x=df['DATE'],
-                                            open=df['OPEN'],
-                                            high=df['HIGH'],
-                                            low=df['LOW'],
-                                            close=df['CLOSE'],
-                                            name=stck)
-            layout_candlestick = go.Layout(
-                title=f'Candlestick Chart for {stck}',
-                xaxis_title='Date',
-                yaxis_title='Stock Price',
-                plot_bgcolor='rgb(3, 2, 21)',
-                paper_bgcolor='rgb(3, 2, 21)',
-                font=dict(color='#299ae1',family='Courier New',size=20),
-                legend=dict(x=0, y=1, traceorder='normal'),
-                xaxis=dict(
-                    type='date',
-                    tickformat='%Y-%m-%d',
-                    gridcolor= '#299ae1',
-                ),
-                yaxis=dict(
-                    gridcolor='#299ae1',
-                ),
-                width=1500,
-                height=700
-            )
-            fig= go.Figure(data=trace_candlestick, layout=layout_candlestick)
-        plot_html=fig.to_html(full_html=False)
-        return render_template('plot_stock.html',plot_html=plot_html)
+        # if 'current_stock' in request.form:
+            # user.watchlist.append(request.form('current_stock'))
+        if 'current_stock' not in request.form:
+            stck=request.form['stock']
+            session["selected_stock"]=stck
+            time_period = request.form['time_period']
+            end_date = datetime.now().date()
+            if time_period == '1W':
+                start_date = end_date - timedelta(weeks=1)
+            elif time_period == '1M':
+                start_date = end_date - timedelta(weeks=4)
+            elif time_period == '1Y':
+                start_date = end_date - timedelta(weeks=52)
+            elif time_period == '3Y':
+                start_date = end_date - timedelta(weeks=3*52)
+            elif time_period == '5Y':
+                start_date = end_date - timedelta(weeks=5*52)
+            else:
+                start_date = end_date - timedelta(weeks=2*52)
+            df = stock_df(symbol=stck, from_date=start_date, to_date=end_date, series="EQ")
+            param=request.form["parameter"]
+            if param!='Candlestick':
+                trace1=go.Scatter(x=df['DATE'], y=df[param], mode='lines', name=stck, line=dict(color='blue'))
+                layout=go.Layout(
+                    title=f'Stock Prices for {stck}',
+                    xaxis_title='Date',
+                    yaxis_title=param,
+                    plot_bgcolor='rgb(3, 2, 21)',
+                    paper_bgcolor='rgb(3, 2, 21)',
+                    font=dict(color='#299ae1',family='Courier New',size=20),
+                    legend=dict(x=0, y=1, traceorder='normal'),
+                    xaxis=dict(
+                        type='date',
+                        tickformat='%Y-%m-%d',
+                        gridcolor= '#299ae1',
+                    ),
+                    yaxis=dict(
+                        gridcolor='#299ae1',
+                    ),
+                    width=1500,
+                    height=700
+                )
+                fig=go.Figure(data=trace1,layout=layout)
+            else:
+                trace_candlestick = go.Candlestick(x=df['DATE'],
+                                                open=df['OPEN'],
+                                                high=df['HIGH'],
+                                                low=df['LOW'],
+                                                close=df['CLOSE'],
+                                                name=stck)
+                layout_candlestick = go.Layout(
+                    title=f'Candlestick Chart for {stck}',
+                    xaxis_title='Date',
+                    yaxis_title='Stock Price',
+                    plot_bgcolor='rgb(3, 2, 21)',
+                    paper_bgcolor='rgb(3, 2, 21)',
+                    font=dict(color='#299ae1',family='Courier New',size=20),
+                    legend=dict(x=0, y=1, traceorder='normal'),
+                    xaxis=dict(
+                        type='date',
+                        tickformat='%Y-%m-%d',
+                        gridcolor= '#299ae1',
+                    ),
+                    yaxis=dict(
+                        gridcolor='#299ae1',
+                    ),
+                    width=1500,
+                    height=700
+                )
+                fig= go.Figure(data=trace_candlestick, layout=layout_candlestick)
+            plot_html=fig.to_html(full_html=False)
+        return render_template('plot_stock.html',plot_html=plot_html, current_stock=stck)
     else:
         stck="SBIN"
         if 'selected_symbol' in request.args:
@@ -283,7 +305,7 @@ def stock_graph():
         )
         fig_candlestick = go.Figure(data=trace_candlestick, layout=layout_candlestick)
         plot_html=fig_candlestick.to_html(full_html=False)
-        return render_template('plot_stock.html',plot_html=plot_html) 
+        return render_template('plot_stock.html',plot_html=plot_html, current_stock=stck) 
 
 @app.route('/compare', methods=['GET', 'POST'])
 def compare():
@@ -307,7 +329,6 @@ def compare():
             start_date = end_date - timedelta(weeks=2*52)
         plots = []
         param=request.form["parameter"]
-
         for i, stck in enumerate(symbols):
             stck = stck.strip()
             df = stock_df(symbol=stck, from_date=start_date, to_date=end_date, series="EQ")
@@ -369,70 +390,26 @@ def compare():
 @app.route('/filter_stocks', methods=['GET', 'POST'])
 def filter_stocks():
     if request.method=="POST":
-        plots=[]
-        lower_bound=request.form["close_lower_bound"]
-        upper_bound=request.form["close_upper_bound"]
-        if lower_bound:
-            lower_bound=int(lower_bound)
-            upper_bound=int(upper_bound)
-            end_date = datetime.now().date()
-            start_date = end_date - timedelta(weeks=1)
-            filtered_list={}
-            for symbol in df_nifty50['Symbol']:
-                df_stock = stock_df(symbol=symbol, from_date=start_date, to_date=end_date, series="EQ")
-                if df_stock['CLOSE'].iloc[0]>=lower_bound and df_stock['CLOSE'].iloc[0]<=upper_bound:
-                    filtered_list[symbol]=df_stock
-            fig = go.Figure()
-            for symbol, filtered_df in filtered_list.items():
-                trace=(go.Bar(
-                    x=[symbol], 
-                    y=[filtered_df['CLOSE'].iloc[0]],  
-                    name=symbol,
-                    text=f"{symbol}: {filtered_df['CLOSE'].iloc[0]}", 
-                ))
-                plots.append(trace)
-            layout=go.Layout(
-                title='Close Prices for Filtered Symbols',
-                xaxis_title='Symbol',
-                yaxis_title='Close Price',
-                barmode='group', 
-                showlegend=True,
-                width=1500,
-                height=550
-            )
-        else:
-            lower_bound=int(request.form["value_lower_bound"])
-            upper_bound=int(request.form["value_upper_bound"])
-            end_date = datetime.now().date()
-            start_date = end_date - timedelta(weeks=1)
-            filtered_list={}
-            for symbol in df_nifty50['Symbol']:
-                df_stock = stock_df(symbol=symbol, from_date=start_date, to_date=end_date, series="EQ")
-                if df_stock['VALUE'].iloc[0]>=lower_bound and df_stock['VALUE'].iloc[0]<=upper_bound:
-                    filtered_list[symbol]=df_stock
-            fig = go.Figure()
-            for symbol, filtered_df in filtered_list.items():
-                trace=(go.Bar(
-                    x=[symbol], 
-                    y=[filtered_df['VALUE'].iloc[0]],  
-                    name=symbol,
-                    text=f"{symbol}: {filtered_df['VALUE'].iloc[0]}", 
-                ))
-                plots.append(trace)
-            layout=go.Layout(
-                title='Close Prices for Filtered Symbols',
-                xaxis_title='Symbol',
-                yaxis_title='Close Price',
-                barmode='group', 
-                showlegend=True,
-                width=1500,
-                height=550
-            )
-        fig = go.Figure(data=plots, layout=layout)
-        plot_html=fig.to_html(full_html=False)
-        return render_template('filter_stocks.html',plot_html=plot_html)
+        lower_bound=request.form["lower_bound"]
+        upper_bound=request.form["upper_bound"]
+        lower_bound=int(lower_bound)
+        upper_bound=int(upper_bound)
+        param=request.form['parameter']
+        end_date = datetime.now().date()
+        start_date = end_date - timedelta(weeks=1)
+        filtered_list={}
+        for symbol in df_nifty50['Symbol']:
+            df_stock = stock_df(symbol=symbol, from_date=start_date, to_date=end_date, series="EQ")
+            if df_stock[param].iloc[0]>=lower_bound and df_stock[param].iloc[0]<=upper_bound:
+                filtered_list[symbol]=df_stock[param].iloc[0]
+        return render_template('filter_stocks.html',filtered_list=filtered_list, param=param)
     else:
-        return render_template('filter_stocks.html')
+        filtered_list={}
+        return render_template('filter_stocks.html',filtered_list=filtered_list)
+    
+@app.route('/about')
+def about():
+    render_template('about.html')
  
     
 @app.route('/logout')

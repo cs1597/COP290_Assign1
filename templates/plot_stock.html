@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <title>Plotly Plot</title>
 </head>
 <body>
@@ -39,8 +40,18 @@
             </div>
         </form>
     </div>
-    <div class="analyze_plot_container">
-        {{ plot_html | safe }}
+    <div class='plot_flex_box'>
+        <div class="analyze_plot_container">
+            {{ plot_html | safe }}
+        </div>
+        <div class="watchlist_button">
+            <form action="/stock_graph" style="height: 100%; width: 100%;" method="post">
+                <input type="hidden" name="current_stock" value="{{ current_stock }}">
+                <button class="watchlist_submit" type="submit">
+                    <i class="bx bxs-bookmark icon icon_box" style="width: 100%; height: 100%;"></i>
+                </button>
+            </form>
+        </div>
     </div>
 </body>
 </html>
