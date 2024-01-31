@@ -4,7 +4,7 @@ body {
     width: 100%;
     height: 100%;
     background-color: rgb(3, 2, 21);
-    font-family: 'Courier New', monospace;
+    font-family: "Roboto",sans-serif;
     color: #ddd;
     margin: 0;
     padding: 0%;
@@ -38,7 +38,7 @@ body {
 }
 
 .sidenav a {
-    font-family: 'Courier New', monospace;
+    font-family: "Roboto",sans-serif;
     text-align: center;
     padding: 6px 8px 6px 8px;
     font-size: 20px;
@@ -66,7 +66,7 @@ body {
 }
 
 .nifty h1 {
-    font-family: 'Courier New', monospace;
+    font-family: "Roboto",sans-serif;
     color: #00ff08;
     text-align: center;
     font-size: 30px;
@@ -79,7 +79,7 @@ body {
 }
 
 .nifty a {
-    font-family: 'Courier New', monospace;
+    font-family: "Roboto",sans-serif;
     padding: 6px 8px 6px 8px;
     font-size: 16px;
     color: #00ff08;
@@ -145,7 +145,7 @@ body {
     margin-top:2%;
     width: 100%;
     height: 20%;
-    font-family: 'Courier New', monospace;
+    font-family: "Roboto",sans-serif;
     font-size: 20px;
     text-align: center;
     color: #ddd;
@@ -197,7 +197,7 @@ body {
 }
 
 .filter-box form {
-    font-family: 'Courier New', monospace;
+    font-family: "Roboto",sans-serif;
     color: #00ff08;
     display: flex;
     flex-direction: column;
@@ -333,7 +333,7 @@ button {
 .logo{
     color:#1aa8db;
     font-size:40px;
-    font-family:'Arial';
+    font-family:"Roboto",sans-serif;
     padding-left: 10%;
     float:left;
     padding-top:1%;
@@ -384,7 +384,7 @@ ul a{
     margin-top: 4%;
     text-decoration:none;
     color:#ddd;
-    font-family:'Courier New', monospace;
+    font-family:"Roboto",sans-serif;
     font-weight:bold;
     font-size:20px;
     transition: 0.4s ease-in-out;
@@ -481,7 +481,7 @@ ul :hover{
 .change_info_button a{
     text-align: center;
     color:#d4e7f3;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: "Roboto",sans-serif;
     text-decoration: none;
 }
 .change_info_button:hover{
@@ -635,7 +635,7 @@ ul :hover{
     height:50px;
     background:#119adf;
     color:#ffffff;
-    font-family:'Courier New', Courier, monospace;
+    font-family:"Roboto",sans-serif;
     font-size:20px;
     font-weight:bold;
     border:none;
@@ -657,3 +657,66 @@ ul :hover{
     font-weight:500;
 }
 
+.analyze_plot_container {
+    /* margin-left: 10%; */
+    width:50%;
+    position: absolute;
+    height:100%;
+    margin-top:-50%;
+    margin-bottom:50%;
+    margin-right:-40%;
+    margin-left:40%;
+
+
+}
+
+.filtered_stock_table {
+    width: 90%;
+    border-collapse: collapse;
+    margin-top: 1%;
+    margin-left: 5%;
+}
+
+.filtered_stock_table th, .filtered_stock_table td {
+    padding: 8px;
+    height: 10%;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.filtered_stock_table th {
+    height: 10%;
+    background-color: #0a1e70;
+    font-size: 70%;
+}
+
+.filtered_stock_table tr:nth-child(even) {
+    background-color: #299ae1;
+    height: 5px;
+}
+
+.filtered_stock_table tr:nth-child(odd) {
+    background-color: #299ae1;
+    height: 10px;
+}
+
+.filtered_stock_table tr:hover {
+    background-color: #0a1e70;
+}
+
+.filter_table_submit_1{
+    width:98%;
+    height: 98%;
+    /* margin-left:1%;
+    margin-top: 0.2%; */
+    background-color: #299ae1;
+    font-family: 'Courier New', monospace;
+    color: #ddd;
+    font-size: 70%;
+    border-radius: 10px;
+    border: 0;
+}
+
+.filter_table_submit_1:hover{
+    background-color: #0a1e70;
+}

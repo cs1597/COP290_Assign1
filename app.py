@@ -15,6 +15,9 @@ import sys
 import plotly.express as px
 import plotly.graph_objects as go
 from flask_migrate import Migrate
+from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy.orm import column_property
+import json
 
 colors = [
                     'blue', 'red', 'green', 'purple', 'orange', 'brown', 'cyan', 'magenta', 'yellow', 'black',
@@ -41,14 +44,28 @@ class User(db.Model):
     full_name= db.Column(db.String(100), nullable=True)
     mobile_number=db.Column(db.String(10),nullable=True)
     email=db.Column(db.String(100),nullable=True)
-    watchlist=db.column(db.Text)
+    watchlist=db.Column(db.Text,server_default=json.dumps([]))
+
+    def watchlist(self):
+        return json.loads(self.watchlist_json)
+    
+    def watchlist(self,value):
+        self.watchlist_json=json.dumps(value)
+
+    def add_to_watchlist(self,stock_symbol):
+        current_watchlist=self.watchlist
+        if stock_symbol not in current_watchlist:
+            current_watchlist.append(stock_symbol)
+        self.watchlist=current_watchlist
+        db.session.commit()
+
+    def get_watchlist(self):
+        return json.loads(self.watchlist)
 
 # Initialize Database within Application Context
 with app.app_context():
     db.create_all()
-# with app.app_context():
-#     if not os.path.exists('users.db'):
-#         db.create_all()
+
 
 migrate = Migrate(app,db)
 @app.route('/')
@@ -361,7 +378,15 @@ def logout():
 @app.route('/user_info')
 def user_info():
     user = User.query.filter_by(username=session['username']).first()
-    return render_template('user_info.html', username=session['username'], mobile_number=user.mobile_number,full_name=user.full_name,email=user.email)
+    # watchlist=user.get_watchlist()
+    watchlist=['SBIN','RELIANCE']
+    end_date = datetime.now().date()
+    start_date = end_date - timedelta(weeks=1)
+    stock_rows=[]
+    for symbol in watchlist:
+        df_stock = stock_df(symbol=symbol, from_date=start_date, to_date=end_date, series="EQ")
+        stock_rows.append(df_stock.iloc[0])
+    return render_template('user_info.html', username=session['username'], mobile_number=user.mobile_number,full_name=user.full_name,email=user.email,watchlist=stock_rows)
 
 @app.route('/change_user_info',methods=['POST','GET'])
 def change_user_info():
@@ -385,6 +410,25 @@ def change_user_info():
 @app.route('/change_password')
 def change_password():
     return render_template('change_password.html',username=session['username'])
+
+@app.route('/buy_stocks',methods=['POST','GET'])
+def buy_stocks():
+    if request.method=="GET":
+        return render_template('buy_stocks.html',stock_symbol=request.args['selected_symbol'],last_price=request.args['last_price'])
+    else:
+        last_price=request.form["last_price"]
+        stock_no=request.form["stock_no"]
+        stock_symbol=request.form["stock_symbol"]
+        user = User.query.filter_by(username=session['username']).first()
+        current_balance=user.balance
+        if(stock_no*last_price<=current_balance):
+            user.balance=current_balance-stock_no*last_price
+            valid=True
+        else:
+            valid=False
+        return render_template('transaction.html',valid=valid,balance=user.balance)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
