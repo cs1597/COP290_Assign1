@@ -15,7 +15,7 @@ import sys
 import requests
 import plotly.express as px
 import plotly.graph_objects as go
-from bsedata.bse import BSE
+#from bsedata.bse import BSE
 from flask_migrate import Migrate
 import json
 
@@ -506,6 +506,32 @@ def buying_market():
             filtered_list[symbol]=q['priceInfo']['lastPrice']
         return render_template('buying_market.html',filtered_list=filtered_list, balance=balance)
 
+#@app.route('/selling_market',methods=['POST','GET'])
+#def selling_market(): need to make one page for selling stocks which should have my holdings and an href to each stock that we wanna sell and analyse stocks basically the table*/
+#when it calls sell stocks it should pass the stock symbol as output and the current price of the stock will be fetched live and call /sell_stocks 
+    
+
+@app.route('/sell_stocks',methods=['POST','GET'])
+def sell_stocks():
+    if request.method=="GET":
+        symbol=request.args['stock_symbol']
+        q=nse_live.stock_quote(symbol.strip())
+        last_price=q['priceInfo']['lastPrice']
+        return render_template('sell_stocks.html',last_price=last_price)
+    else:
+        stock_no=request.form["stock_no"]
+        symbol=request.form['stock_symbol']
+        q=nse_live.stock_quote(symbol.strip())
+        last_price=q['priceInfo']['lastPrice']
+        user = User.query.filter_by(username=session['username']).first()
+        current_balance=user.balance
+        # condition to add whether can sell these many stocks or not, if yes increase balance and remove from holdings also some indicator like valid
+
+        db.session.commit()
+        return render_template('sell_transaction.html',valid=valid,balance=user.balance)
+
+
+
 @app.route('/buy_stocks',methods=['POST','GET'])
 def buy_stocks():
     if request.method=="GET":
@@ -521,6 +547,7 @@ def buy_stocks():
         current_balance=user.balance
         if(int(stock_no)*last_price<=current_balance):
             user.balance=current_balance-int(stock_no)*last_price
+            # If the transaction is succesfull we need to update the holdings of the user 
             valid=True
         else:
             valid=False

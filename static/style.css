@@ -9,6 +9,10 @@ body {
     margin: 0;
     padding: 0%;
 }
+.body_about{
+    background-image:url("background.jpeg") no-repeat center center fixed; 
+    background-size: cover;
+}
 
 .wrapper{
     justify-content:center;
@@ -17,7 +21,7 @@ body {
     width:100%;
     height:100%;
     display:flex;
-    background-image:url("cadef400-151f-11ea-91a1-7e0f83e7b2cf.jpeg");
+    background-image:url("background.jpeg");
     background-position:center;
     background-size: cover;
     background-repeat: no-repeat;
