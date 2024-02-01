@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <title>Update User Info</title>
+    </head>
+</html>
+<body>
+    <div class="wrapper">
+        <form action="/change_user_info" style="width:100%; height:100%" method="post">
+            <div class="details_box">
+                <div class="details-header">
+                    <a >Edit Details</a>
+                </div>
+                <div class="input_box">
+                    <i class="bx bxs-user icon icon-update_details"></i>
+                    <input type="text" id="user" name="username" class="input-field" required>
+                    <label for="user" class="edit_label">Username</label>
+                </div>
+
+                <div class="input_box">
+                    <i class="bx bx-user-circle icon icon-update_details"></i>  
+                    <input type="text" id="name" name="full_name" class="input-field" required>
+                    <label for="name" class="edit_label">Full name</label>
+                    
+                </div>
+                <div class="input_box">
+                    <i class="bx bx-envelope icon icon-update_details"></i>
+                    <input type="text" id="email" name="email" class="input-field" required>
+                    <label for="email" class="edit_label">Email</label>
+                    
+                </div>
+                <div class="input_box">
+                    <i class="bx bxs-phone icon icon-update_details"></i>
+                    <input type="text" id="mobile" name="mobile_number" class="input-field" required>
+                    <label for="mobile" class="edit_label">Mobile No.</label>   
+                </div>
+                <div class="input_box">
+                    <button type="submit" class="input-submit">Update</button> 
+                </div>
+            </div>
+        </form>
+    </div>
+</body>

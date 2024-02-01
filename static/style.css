@@ -17,7 +17,7 @@ body {
     width:100%;
     height:100%;
     display:flex;
-    background-image:url("cadef400-151f-11ea-91a1-7e0f83e7b2cf.jpeg");
+    background-image:url("background.jpeg");
     background-position:center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -677,13 +677,13 @@ ul a:hover{
 }
 
 .balance_box{
-    width: 30%;
+    width: 80%;
     height: 4.5%;
     margin-top: 4%;
 }
 
 .side_info_bar{
-    width:25%;
+    width:30%;
     height:90%;
     padding-top:5%;
     /* justify-content: center; */
