@@ -243,11 +243,8 @@ body {
     height: 100%;
     width:15%;
     position: relative;
-    /* z-index: 1; */
     left: 0%;
     background-color: #299ae1;
-    /* overflow-x: hidden;
-    overflow-y: hidden; */
     padding-top: 20px;
 }
 
@@ -372,7 +369,6 @@ ul a:hover{
     position: fixed;
     display: flex;
     flex-direction: row;
-    /* border-radius: 10px; */
     bottom: 34%;
     left: 17%;
     height: 55%;
@@ -495,19 +491,6 @@ ul a:hover{
     background-color: rgba(220,102,76,1);
 }
 
-/* .login-container {
-    background-color: white;
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    width: 300px;
-}
-
-.login-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
-} */
-
 .analyze_plot_container {
     margin-left: 10%;
     height: 600px;
@@ -575,7 +558,6 @@ ul a:hover{
     color: #00ff08;
     display: flex;
     flex-direction: column;
-    /* text-align: left; */
     text-align: center;
     font-size: 12px;
     padding-bottom: 20px;
@@ -624,7 +606,6 @@ ul a:hover{
 }
 
 .analyze_plot_container {
-    /* margin-left: 10%; */
     width:80%
 }
 
@@ -690,7 +671,6 @@ ul a:hover{
     width:30%;
     height:90%;
     padding-top:5%;
-    /* justify-content: center; */
     align-items: center;
     display:flex;
     flex-direction: column;
@@ -809,14 +789,12 @@ input[type="password"] {
     max-width: 800px;
 }
 
-/* Add these styles to limit the max width of the graph container */
+
 .plotly-graph {
     max-width: 800px;
-    /* Set your preferred maximum width */
     width: 100%;
     margin: auto;
-    /* Center the graph within the container */
-}
+    }
 
 .drop-down {
     background-color: #fff;

@@ -7,13 +7,10 @@ from datetime import datetime,timedelta
 import jugaad_data as jd
 from jugaad_data.nse import stock_df,index_df,NSELive
 import matplotlib.pyplot as plt
-import numpy as np
 import requests
 import plotly.express as px
 import plotly.graph_objects as go
-from bsedata.bse import BSE
 from flask_migrate import Migrate
-import json
 import csv
 from flask_caching import Cache
 
