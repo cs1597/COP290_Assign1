@@ -1,4 +1,3 @@
-import base64
 from io import BytesIO
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
@@ -9,9 +8,6 @@ import jugaad_data as jd
 from jugaad_data.nse import stock_df,index_df,NSELive
 import matplotlib.pyplot as plt
 import numpy as np
-import time
-import os
-import sys
 import requests
 import plotly.express as px
 import plotly.graph_objects as go
@@ -62,9 +58,6 @@ class User(db.Model):
             for key, value in your_dictionary.items():
                 csv_writer.writerow([key, value])
 
-#---------------------------------------------------------
-#Never chaneg the user name in the update details form
-#---------------------------------------------------------
 
     def read_csv_to_dictionary(self,username):
         csv_file_name = f"{username}_file.csv"
@@ -98,10 +91,12 @@ with app.app_context():
     db.create_all()
 migrate = Migrate(app,db)
 
+#main page
 @app.route('/')
 def index():
     return render_template('login.html')
 
+#registration
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -120,6 +115,7 @@ def register():
 
     return render_template('register.html')
 
+#login page
 @app.route('/login', methods=['POST'])
 def login():
     username = request.form['username']
@@ -133,7 +129,8 @@ def login():
     else:
         flash('Invalid username or password')
         return redirect(url_for('index'))
-    
+
+#homepage containing news, top gainers, losers and nifty plot 
 @app.route('/homepage', methods=['GET','POST'])
 def homepage():
     if request.method=="GET":
@@ -141,11 +138,7 @@ def homepage():
         start_date = end_date - timedelta(days=365)
         df = index_df(symbol="NIFTY 50", from_date=start_date, to_date=end_date)
         df.sort_values(by=['HistoricalDate'],inplace=True)
-        trace_candlestick = go.Candlestick(x=df['HistoricalDate'],
-                                                open=df['OPEN'],
-                                                high=df['HIGH'],
-                                                low=df['LOW'],
-                                                close=df['CLOSE'],)
+        trace_candlestick = go.Candlestick(x=df['HistoricalDate'],open=df['OPEN'],high=df['HIGH'],low=df['LOW'],close=df['CLOSE'],)
         layout_candlestick = go.Layout(
             title=f'NIFTY50',
             xaxis_title='Date',
@@ -157,11 +150,8 @@ def homepage():
             xaxis=dict(
                 type='date',
                 tickformat='%Y-%m-%d',
-                gridcolor= '#299ae1',
-            ),
-            yaxis=dict(
-                gridcolor='#299ae1',
-            ),
+                gridcolor= '#299ae1',),
+            yaxis=dict(gridcolor='#299ae1',),
             width=1030,
             height=600
         )
@@ -169,6 +159,7 @@ def homepage():
         plot_html=fig.to_html(full_html=False)
         keywords = ['NSE','BSE','stock','share']
         articles=[]
+        #fetching latest news 
         for keyword in keywords:
             news_api_url = f'https://newsapi.org/v2/top-headlines?q={keyword}&country=in&apiKey={news_api_key}'
             response = requests.get(news_api_url)
@@ -188,7 +179,8 @@ def homepage():
         increase = increase[:4] 
         decrease = decrease[:4] 
         return render_template('homepage.html', username=session['username'],increase=increase,decrease=decrease,top_news=articles[:3], plot_html=plot_html)
-    
+
+#analysing NIFTY50    
 @app.route('/analyze_nifty', methods=['GET','POST'])
 def analyze_nifty():
     if request.method=="POST":
@@ -210,11 +202,7 @@ def analyze_nifty():
         if param=='Candlestick':
             df = index_df(symbol="NIFTY 50", from_date=start_date, to_date=end_date)
             df.sort_values(by=['HistoricalDate'],inplace=True)
-            trace_candlestick = go.Candlestick(x=df['HistoricalDate'],
-                                                    open=df['OPEN'],
-                                                    high=df['HIGH'],
-                                                    low=df['LOW'],
-                                                    close=df['CLOSE'],)
+            trace_candlestick = go.Candlestick(x=df['HistoricalDate'],open=df['OPEN'],high=df['HIGH'],low=df['LOW'],close=df['CLOSE'],)
             layout_candlestick = go.Layout(
                 title=f'NIFTY50',
                 xaxis_title='Date',
@@ -250,14 +238,10 @@ def analyze_nifty():
                 xaxis=dict(
                     type='date',
                     tickformat='%Y-%m-%d',
-                    gridcolor= '#299ae1',
-                ),
-                yaxis=dict(
-                    gridcolor='#299ae1',
-                ),
+                    gridcolor= '#299ae1',),
+                yaxis=dict(gridcolor='#299ae1',),
                 width=1500,
-                height=700
-            )
+                height=700)
             fig=go.Figure(data=trace1,layout=layout)
         plot_html=fig.to_html(full_html=False)
         return render_template('analyze_nifty.html',plot_html=plot_html)
@@ -266,11 +250,7 @@ def analyze_nifty():
         start_date = end_date - timedelta(days=365*2)
         df = index_df(symbol="NIFTY 50", from_date=start_date, to_date=end_date)
         df.sort_values(by=['HistoricalDate'],inplace=True)
-        trace_candlestick = go.Candlestick(x=df['HistoricalDate'],
-                                                open=df['OPEN'],
-                                                high=df['HIGH'],
-                                                low=df['LOW'],
-                                                close=df['CLOSE'],)
+        trace_candlestick = go.Candlestick(x=df['HistoricalDate'],open=df['OPEN'],high=df['HIGH'],low=df['LOW'],close=df['CLOSE'],)
         layout_candlestick = go.Layout(
             title=f'NIFTY50',
             xaxis_title='Date',
@@ -294,6 +274,7 @@ def analyze_nifty():
         plot_html=fig.to_html(full_html=False)
         return render_template('analyze_nifty.html', plot_html=plot_html)
 
+#Analysing a single stock based on input parameters
 @app.route('/stock_graph', methods=['GET', 'POST'])
 def stock_graph():
     if request.method == 'POST':
@@ -411,6 +392,7 @@ def stock_graph():
         user = User.query.filter_by(username=session['username']).first()
         return render_template('plot_stock.html',plot_html=plot_html, current_stock=stck) 
 
+#Comparing multiple stocks in a single graph based on multiple parameters
 @app.route('/compare', methods=['GET', 'POST'])
 def compare():
     if request.method == 'POST':
@@ -490,7 +472,8 @@ def compare():
         fig=go.Figure(data=trace1,layout=layout)
         plot_html=fig.to_html(full_html=False)
         return render_template('compare.html')
-    
+
+#Filtering stocks based on multiple parameters 
 @app.route('/filter_stocks', methods=['GET', 'POST'])
 def filter_stocks():
     if request.method=="POST":
@@ -510,7 +493,8 @@ def filter_stocks():
     else:
         filtered_list={}
         return render_template('filter_stocks.html',filtered_list=filtered_list)
-    
+
+#caching for fast retrieval of data  
 @app.route('/buying_market', methods=['GET', 'POST'])
 @cache.cached(timeout=300)
 def buying_market():
@@ -537,6 +521,7 @@ def buying_market():
             filtered_list[symbol]=q['priceInfo']['lastPrice']
         return render_template('buying_market.html',filtered_list=filtered_list)
 
+#platform for selling stocks
 @app.route('/selling_market',methods=['GET'])
 def selling_market():
     username=session['username']
@@ -545,6 +530,7 @@ def selling_market():
     holdings=user.read_csv_to_dictionary(session['username'])
     return render_template('selling_market.html',holdings=holdings,balance=balance)
 
+#interface for selling stocks
 @app.route('/sell_stocks',methods=['POST','GET'])
 def sell_stocks():
     if request.method=="GET":
@@ -573,7 +559,9 @@ def sell_stocks():
 
         db.session.commit()
         return render_template('sell_transaction.html',valid=valid,balance=user.balance)
-    
+ 
+
+#interface to buy a particular stock   
 @app.route('/buy_stocks',methods=['POST','GET'])
 def buy_stocks():
     if request.method=="GET":
@@ -603,11 +591,13 @@ def buy_stocks():
             valid=False
         db.session.commit()
         return render_template('transaction.html',valid=valid,balance=user.balance)
-    
+
+#about the website   
 @app.route('/about')
 def about():
     return render_template('about.html')
 
+#user info page
 @app.route('/user_info')
 def user_info():
     end_date=datetime.now().date()
@@ -621,6 +611,7 @@ def user_info():
     print(stock_rows)
     return render_template('user_info.html', username=session['username'], mobile_number=user.mobile_number,full_name=user.full_name,email=user.email,watchlist=stock_rows)
 
+#change user info
 @app.route('/change_user_info', methods=["GET","POST"])
 def change_user_info():
     if request.method == 'POST':

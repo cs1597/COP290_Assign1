@@ -9,6 +9,10 @@ body {
     margin: 0;
     padding: 0%;
 }
+.body_about{
+    background-image:url("background.jpeg") no-repeat center center fixed; 
+    background-size: cover;
+}
 
 .wrapper{
     justify-content:center;
@@ -226,8 +230,8 @@ body {
     display: flex;
     flex-direction: column;
     background-color:#299ae1;
-    margin-top: 12%;
-    margin-left: 25%;
+    margin-top: 10%;
+    margin-left: 22%;
     width: 50%;
     border-radius: 10px;
     padding: 1%;
