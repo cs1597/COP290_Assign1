@@ -177,7 +177,7 @@ def analyze_nifty():
         else:
             start_date = end_date - timedelta(weeks=2*52)
         param=request.form["parameter"]
-        if param=='Candelstick':
+        if param=='Candlestick':
             df = index_df(symbol="NIFTY 50", from_date=start_date, to_date=end_date)
             df.sort_values(by=['HistoricalDate'],inplace=True)
             trace_candlestick = go.Candlestick(x=df['HistoricalDate'],
@@ -501,7 +501,7 @@ def buying_market():
         username=session['username']
         user = User.query.filter_by(username=username).first()
         balance=user.balance
-        for symbol in df_niffty50:
+        for symbol in df_nifty50['Symbol']:
             q=nse_live.stock_quote(symbol)
             filtered_list[symbol]=q['priceInfo']['lastPrice']
         return render_template('buying_market.html',filtered_list=filtered_list, balance=balance)
