@@ -17,7 +17,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 #from bsedata.bse import BSE
 from flask_migrate import Migrate
-import json
+import csv
 
 # bse=BSE(update_codes=True)
 # print(bse.getScripCodes())
@@ -49,6 +49,8 @@ class User(db.Model):
     mobile_number=db.Column(db.String(10),nullable=True)
     email=db.Column(db.String(100),nullable=True)
     balance = db.Column(db.Integer,nullable=True)
+    holdings=db.Column(db.String(255),nullable=True) #holdings conatins the name of a csv file which will be customly generated and stocks wiht their number wil be written and read from it to a dictionary 
+    watchlist=db.Column(db.Text,nullable=True) #watchlist consisting of comma separated stock symbols
     # watchlist=db.Column(db.Text,server_default=json.dumps([]))
 
     # def get_watchlist(self):
@@ -63,6 +65,49 @@ class User(db.Model):
     #         current_watchlist.append(stock_symbol)
     #     self.set_watchlist=current_watchlist
     #     db.session.commit()
+    def write_dictionary_to_csv(self,username, your_dictionary):
+        csv_file_name = f"{username}_file.csv"
+
+        with open(csv_file_name, "w", newline="") as csvfile:
+            csv_writer = csv.writer(csvfile)
+            for key, value in your_dictionary.items():
+                csv_writer.writerow([key, value])
+
+#---------------------------------------------------------
+#Never chaneg the user name in the update details form
+#---------------------------------------------------------
+
+    def read_csv_to_dictionary(self,username):
+        csv_file_name = f"{username}_file.csv"
+        your_dictionary = {}
+        with open(csv_file_name, "r") as csvfile:
+            csv_reader = csv.reader(csvfile)
+            for row in csv_reader:
+                key, value = row
+                your_dictionary[key] = int(value)  # Assuming values are integers
+        return your_dictionary
+
+    #to write watchlist elements stored as a list to the csv file 
+    def write_stock_symbols_to_csv(self,stock_symbols, username):
+        csv_file_name=f"{username}_watchlist.csv"
+        with open(csv_file_name, "w", newline="") as csvfile:
+            csv_writer = csv.writer(csvfile)
+            csv_writer.writerow(["Stock Symbol"])  # Writing header
+            for symbol in stock_symbols:
+                csv_writer.writerow([symbol])
+    
+    def read_stock_symbols_from_csv(self,username):
+        csv_file_name=f"{username}_watchlist.csv"
+        stock_symbols = []
+        with open(csv_file_name, "r") as csvfile:
+            csv_reader = csv.reader(csvfile)
+            next(csv_reader)  # Skip the header
+            for row in csv_reader:
+                stock_symbols.append(row[0])
+        return stock_symbols
+
+    
+
 
 # Initialize Database within Application Context
 with app.app_context():
@@ -495,7 +540,7 @@ def buying_market():
             if df_stock[param].iloc[0]>=lower_bound and df_stock[param].iloc[0]<=upper_bound:
                 filtered_list[symbol]=df_stock[param].iloc[0]
         return render_template('buying_market.html',filtered_list=filtered_list, param=param)
-    else:
+    else: 
         filtered_list={}
         df_niffty50=['LT']
         username=session['username']
@@ -509,7 +554,14 @@ def buying_market():
 #@app.route('/selling_market',methods=['POST','GET'])
 #def selling_market(): need to make one page for selling stocks which should have my holdings and an href to each stock that we wanna sell and analyse stocks basically the table*/
 #when it calls sell stocks it should pass the stock symbol as output and the current price of the stock will be fetched live and call /sell_stocks 
-    
+
+@app.route('/selling_market',methods=['GET'])
+def selling_market():
+    username=session['username']
+    user = User.query.filter_by(username=username).first()
+    balance=user.balance
+    holdings=user.read_csv_to_dictionary(session['username'])
+    return render_template('selling_market.html',holdings=holdings,balance=balance)
 
 @app.route('/sell_stocks',methods=['POST','GET'])
 def sell_stocks():
@@ -525,12 +577,20 @@ def sell_stocks():
         last_price=q['priceInfo']['lastPrice']
         user = User.query.filter_by(username=session['username']).first()
         current_balance=user.balance
+        holdings=user.read_csv_to_dictionary(session['username'])
+        if(holdings[symbol]>=stock_no):
+            valid=True
+            holdings[symbol]-=stock_no
+            if(holdings[symbol]==0):
+                del holdings[symbol]
+            user.write_dictionary_to_csv(session['username'],holdings)
+            user.balance=current_balance+int(stock_no)*last_price
+        else:
+            valid=False
         # condition to add whether can sell these many stocks or not, if yes increase balance and remove from holdings also some indicator like valid
 
         db.session.commit()
         return render_template('sell_transaction.html',valid=valid,balance=user.balance)
-
-
 
 @app.route('/buy_stocks',methods=['POST','GET'])
 def buy_stocks():
@@ -540,14 +600,19 @@ def buy_stocks():
     else:
         stock_no=request.form["stock_no"]
         symbol=request.form["stock_symbol"]
-        print(symbol)
         q=nse_live.stock_quote(symbol.strip())
         last_price=q['priceInfo']['lastPrice']
         user = User.query.filter_by(username=session['username']).first()
         current_balance=user.balance
         if(int(stock_no)*last_price<=current_balance):
             user.balance=current_balance-int(stock_no)*last_price
+            holdings=user.read_csv_to_dictionary(session['username'])
+            if(symbol in holdings):
+                holdings[symbol]+=stock_no
+            else:
+                holdings[symbol]=stock_no
             # If the transaction is succesfull we need to update the holdings of the user 
+            user.write_dictionary_to_csv(session['username'],holdings)
             valid=True
         else:
             valid=False
@@ -561,7 +626,8 @@ def about():
 @app.route('/user_info')
 def user_info():
     user = User.query.filter_by(username=session['username']).first()
-    return render_template('user_info.html', username=session['username'], mobile_number=user.mobile_number,full_name=user.full_name,email=user.email)
+    watchlist=user.read_stock_symbols_from_csv(session['username'])
+    return render_template('user_info.html', username=session['username'], mobile_number=user.mobile_number,full_name=user.full_name,email=user.email,watchlist=watchlist)
 
 def change_user_info():
     if request.method == 'POST':

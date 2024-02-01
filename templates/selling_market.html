@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <title>Plotly Plot</title>
+</head>
+<body>
+    <div class="top_nav_bar">
+        <div class="top_nav_icon">
+            <h2 class="top_nav_logo">Tradescope</h2>
+        </div>
+        <div class="top_nav_menu">
+            <ul>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+                <a href="/homepage" class="top_nav_button">Home</a>
+                <a href="/about" class="top_nav_button">About</a>
+                <a href="/settings" class="top_nav_button">Settings</a>
+                <a href="/logout" class="top_nav_button">Logout</a>
+                <a href="/user_info" class="fas fa-user"></a>
+            </ul>
+        </div>
+    </div>
+    <!-- <div class="topnav">
+        <h1 class="topnav_header">Filter Stocks</h1>
+        <form action="/filter_stocks" method="post">
+            <div class="form-group">
+                <label for="parameter" style="margin-left: 100px;font-size: 20px;">Select Parameter: </label>
+                <select name="parameter" style="margin-top: 25px; margin-left: 0px;">
+                    <option value="OPEN">OPEN</option>
+                    <option value="HIGH">HIGH</option>
+                    <option value="LOW">LOW</option>
+                    <option value="LTP">LTP</option>
+                    <option value="CLOSE">CLOSE</option>
+                    <option value="VOLUME">VOLUME</option>
+                    <option value="VALUE">VALUE</option>
+                    <option value="NO OF TRADES">NUMBER OF TRADES</option>
+                </select>
+                <label for="lower_bound" style="margin-left: 70px;font-size: 20px;">Enter Lower Bound:</label>
+                <input type="text" id="lower_bound" name="lower_bound" required style="width: 300px;">
+                <label for="upper_bound" style="margin-left: 70px;font-size: 20px;">Enter Upper Bound:</label>
+                <input type="text" id="upper_bound" name="upper_bound" required style="width: 300px;">
+            </div>
+            <div>
+                <button class="topnav_submit" type="submit">Submit</button>
+            </div>
+        </form>
+    </div> -->
+    <div class="balance_box">
+        <h1>Current Balance: {{ balance }}</h1>
+    </div>
+    <div class="analyze_plot_container" style="margin-top: 0;">
+        <h2 style="text-align: center; color: #ddd;">My Holdings</h2>
+            <table class="filtered_stock_table">
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>No Of Stocks</th>
+                        <th>Analyze</th>
+                        <th>Sell</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for symbol, stock_no in holdings.items() %}
+                        <tr>
+                            <td style="width: 30%;">{{ symbol }}</td>
+                            <td style="width: 30%;">{{ stock_no }}</td>
+                            <td style="width:20%;">
+                            <form style="height: 100%; width: 100%; padding: 0;" action="/stock_graph" method="get">
+                                <input type="hidden" name="selected_symbol" value="{{ symbol }}">
+                                <button class="filter_table_submit_1" type="submit">Analyze</button>
+                            </form>
+                            </td>
+                            <td style="width:20%;">
+                            <form style="height: 100%; width: 100%; padding: 0;" action="/sell_stocks" method="get">
+                                <input type="hidden" name="selected_symbol" value="{{ symbol }}">
+                                <input type="hidden" name="stock_no" value="{{ stock_no }}">
+                                <button class="filter_table_submit_1" type="submit">Sell Stocks</button>
+                            </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </div>
+</body>
+</html>

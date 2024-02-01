@@ -37,6 +37,37 @@
             </ul>
         </div>
     </div>
-    
+    <div class="analyze_plot_container">
+        <h2 style="text-align: center; color: #ddd; margin-top: 7%;">Watchlist</h2>
+            <table class="filtered_stock_table">
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>OPEN</th>
+                        <th>CLOSE</th>
+                        <th>HIGH</th>
+                        <th>LOW</th>
+                        <th>VIEW GRAPH</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row_data in watchlist %}
+                    <form action="/stock_graph" method="get">
+                        <tr>
+                            <td style="width: 20%;">{{ row_data['SYMBOL'] }}</td>
+                            <td style="width: 20%;">{{ row_data['OPEN'] }}</td>
+                            <td style="width: 20%;">{{ row_data['CLOSE'] }}</td>
+                            <td style="width: 20%;">{{ row_data['HIGH'] }}</td>
+                            <td style="width: 20%;">{{ row_data['LOW'] }}</td>
+                            <td style="width:30%">
+                            <input type="hidden" name="selected_symbol" value="{{ symbol }}">
+                            <button class="filter_table_submit_1" type="submit">View Graph</button>
+                            </td>
+                        </tr>
+                    </form>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </div>
 </body>
 </html>
